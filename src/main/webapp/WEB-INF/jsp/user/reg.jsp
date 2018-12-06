@@ -31,8 +31,8 @@
             </ul>
             <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
                 <div class="layui-tab-item layui-show">
-                    <div class="layui-form layui-form-pane">
-                        <form method="post">
+                  <div class="layui-form layui-form-pane">
+                        <form method="post" action="${pageContext.request.contextPath}/user/doreg">
                             <div class="layui-form-item">
                                 <label for="L_email" class="layui-form-label">邮箱</label>
                                 <div class="layui-input-inline">

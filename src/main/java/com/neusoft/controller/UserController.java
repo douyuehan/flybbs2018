@@ -7,10 +7,14 @@ import com.neusoft.response.RegRespObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 /**
  * Created by Administrator on 2018/12/6.
@@ -104,4 +108,17 @@ public class UserController {
         return regRespObj;
     }
 
+    @RequestMapping("set")
+    public String userSetting()
+    {
+        return "user/set";
+    }
+    @RequestMapping("upload")
+    public void upload(@RequestParam  MultipartFile file) throws IOException {
+        String filename = file.getOriginalFilename();
+        File file1 = new File("d:/head.jpg");
+        file.transferTo(file1);
+
+
+    }
 }

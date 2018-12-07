@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 /**
  * Created by Administrator on 2018/12/6.
@@ -17,8 +18,10 @@ import java.util.Date;
 @Controller
 @RequestMapping("user")
 public class UserController {
+
     @Autowired
     UserMapper userMapper;
+
     @RequestMapping("reg")
     public String reg()
     {
@@ -65,10 +68,40 @@ public class UserController {
         }
         return regRespObj;
     }
-
+    @RequestMapping("logout")
+    public String logout(HttpServletRequest request)
+    {
+        request.getSession().invalidate();
+        return "redirect:" + request.getServletContext().getContextPath() +"/";
+    }
     @RequestMapping("login")
     public String login()
     {
         return "user/login";
     }
+    @RequestMapping("dologin")
+    @ResponseBody
+    public RegRespObj dologin(User user,HttpServletRequest request)
+    {
+        //查询数据库，用email和密码作为条件查询，如果查出来0条记录，登录失败
+        //否则，登录成功
+        user.setPasswd(MD5Utils.getPwd(user.getPasswd()));
+        User userResult = userMapper.selectByEmailAndPass(user);
+        RegRespObj regRespObj = new RegRespObj();
+        if(userResult == null)
+        {
+            regRespObj.setStatus(1);
+            regRespObj.setMsg("登录失败");
+        }
+        else
+        {
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("userinfo",userResult);
+            regRespObj.setStatus(0);
+            regRespObj.setAction(request.getServletContext().getContextPath() + "/");
+        }
+
+        return regRespObj;
+    }
+
 }

@@ -185,4 +185,7 @@
       join_time = #{joinTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByEmail" parameterType="String" resultType="com.neusoft.domain.User">
+    select * from tab_user where email=#{value};
+  </select>
 </mapper>

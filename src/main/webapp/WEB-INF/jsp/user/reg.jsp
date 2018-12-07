@@ -17,6 +17,65 @@
     <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/layui/css/layui.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/global.css">
+    <script src="${pageContext.request.contextPath}/res/jquery-3.3.1.js"></script>
+    <script>
+        function checkEmail() {
+            var a=$("#form1").serialize();
+            if($("#L_email").val().length==0){
+                $("#span_return_checkEmail").text("输入邮箱为空，请重新输入");
+                return
+            }
+            $.post({
+                url:"${pageContext.request.contextPath}/user/checkEmail",
+                data:a,
+                dataType:"json",
+                success:function (data) {
+                    $("#span_return_checkEmail").text(data.msg);
+                }
+            })
+        }
+
+        $(function () {
+            $("#L_repass").blur(function () {
+                var L_pass=$("#L_pass").val();
+                var L_repass=$("#L_repass").val();
+                if(L_pass == L_repass){
+                    $(".check_password").text("");
+                }else{
+                    $("#L_pass").val("");
+                    $("#L_repass").val("");
+                    $(".check_password").text("密码不一致");
+                }
+            })
+        });
+
+        var result=0;
+        $(function () {
+            var firstNum=Math.floor(Math.random()*20)+1;
+            var SecondNum=Math.floor(Math.random()*20)+1;
+            result=firstNum+SecondNum;
+            $("#spanRenlei").text(firstNum+"+"+SecondNum+"=?");
+        });
+        $(function () {
+            $("#L_vercode").blur(function () {
+                if($("#L_vercode").val() != result){
+                    $("#checkRenlei").text("答案错误");
+                }else {
+                    $("#checkRenlei").text("");
+                }
+            })
+        });
+        $(function () {
+            $("button[class=layui-btn]").click(function () {
+                if($("#checkRenlei").text() == "答案错误"){
+                    alert("答案错误,重新回答");
+                    return false;
+                }
+            })
+        })
+
+
+    </script>
 </head>
 <body>
 
@@ -32,24 +91,26 @@
             <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
                 <div class="layui-tab-item layui-show">
                   <div class="layui-form layui-form-pane">
-                        <form method="post" action="${pageContext.request.contextPath}/user/doreg">
+                        <form id="form1" method="post" action="${pageContext.request.contextPath}/user/doreg">
                             <div class="layui-form-item">
                                 <label for="L_email" class="layui-form-label">邮箱</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" id="L_email" name="email" required lay-verify="email" autocomplete="off" class="layui-input">
+                                    <input type="text" id="L_email" name="email" required lay-verify="email" autocomplete="off" class="layui-input" onblur="checkEmail()">
+                                    <span id="span_return_checkEmail"></span>
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">将会成为您唯一的登入名</div>
                             </div>
                             <div class="layui-form-item">
                                 <label for="L_username" class="layui-form-label">昵称</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" id="L_username" name="username" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    <input type="text" id="L_username" name="nickname" required lay-verify="required" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label for="L_pass" class="layui-form-label">密码</label>
                                 <div class="layui-input-inline">
-                                    <input type="password" id="L_pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    <input type="password" id="L_pass" name="passwd" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    <span class="check_password"></span>
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">6到16个字符</div>
                             </div>
@@ -57,15 +118,17 @@
                                 <label for="L_repass" class="layui-form-label">确认密码</label>
                                 <div class="layui-input-inline">
                                     <input type="password" id="L_repass" name="repass" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    <span class="check_password"></span>
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label for="L_vercode" class="layui-form-label">人类验证</label>
                                 <div class="layui-input-inline">
                                     <input type="text" id="L_vercode" name="vercode" required lay-verify="required" placeholder="请回答后面的问题" autocomplete="off" class="layui-input">
+                                    <span id="checkRenlei"></span>
                                 </div>
                                 <div class="layui-form-mid">
-                                    <span style="color: #c00;">{{d.vercode}}</span>
+                                    <span style="color: #c00;" id="spanRenlei"></span>
                                 </div>
                             </div>
                             <div class="layui-form-item">

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
+
 /**
  * Created by Administrator on 2018/12/6.
  */
@@ -114,11 +116,32 @@ public class UserController {
         return "user/set";
     }
     @RequestMapping("upload")
-    public void upload(@RequestParam  MultipartFile file) throws IOException {
-        String filename = file.getOriginalFilename();
-        File file1 = new File("d:/head.jpg");
-        file.transferTo(file1);
+    @ResponseBody
+    public RegRespObj upload(@RequestParam  MultipartFile file,HttpServletRequest request) throws IOException {
+        RegRespObj regRespObj = new RegRespObj();
+        if(file.getSize()>0){
+            String realPath = request.getServletContext().getRealPath("/res/uploadImgs");
+            File file1 = new File(realPath);
+            if(!file1.exists()){
+                file1.mkdirs();
+            }
+            UUID uuid = UUID.randomUUID();
+            File file2 = new File(realPath+File.separator+uuid+file.getOriginalFilename());
+            file.transferTo(file2);
 
+            HttpSession session = request.getSession();
+            User userinfo = (User)session.getAttribute("userinfo");
+            userinfo.setPicPath(uuid+file.getOriginalFilename());
+            session.setAttribute("userinfo",userinfo);
 
+            userMapper.updateByPrimaryKeySelective(userinfo);
+
+            regRespObj.setStatus(0);
+        }
+        else
+        {
+            regRespObj.setStatus(1);
+        }
+        return regRespObj;
     }
 }

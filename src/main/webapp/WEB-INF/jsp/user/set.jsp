@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -115,7 +115,15 @@
                             <button type="button" class="layui-btn upload-img">
                                 <i class="layui-icon">&#xe67c;</i>上传头像
                             </button>
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+                            <c:choose>
+                                <c:when test="${userinfo.picPath != ''}">
+                                    <img src="${pageContext.request.contextPath}/res/uploadImgs/${userinfo.picPath}">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+                                </c:otherwise>
+                            </c:choose>
+
                             <span class="loading"></span>
                         </div>
                     </div>

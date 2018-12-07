@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 /**
  * Created by Administrator on 2018/12/6.
@@ -26,7 +27,7 @@ public class UserController {
 
     @RequestMapping("doreg")
     @ResponseBody
-    public RegRespObj doReg(User user)
+    public RegRespObj doReg(User user, HttpServletRequest request)
     {
         RegRespObj regRespObj = new RegRespObj();
         User user1 = userMapper.selectByEmail(user.getEmail());
@@ -39,7 +40,8 @@ public class UserController {
             int i = userMapper.insertSelective(user);
             if(i>0){
                 regRespObj.setStatus(0);
-                regRespObj.setAction("/");
+                System.out.println(request.getServletContext().getContextPath());
+                regRespObj.setAction(request.getServletContext().getContextPath() + "/");
             }else {
                 regRespObj.setStatus(1);
                 regRespObj.setMsg("数据库错误，联系管理员");

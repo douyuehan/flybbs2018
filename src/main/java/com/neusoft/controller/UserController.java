@@ -1,6 +1,6 @@
 package com.neusoft.controller;
 
-import com.neusoft.Utils.MD5Utils;
+import com.neusoft.util.MD5Utils;
 import com.neusoft.domain.User;
 import com.neusoft.mapper.UserMapper;
 import com.neusoft.response.RegRespObj;

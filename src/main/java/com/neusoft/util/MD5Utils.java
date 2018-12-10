@@ -1,4 +1,4 @@
-package com.neusoft.Utils;
+package com.neusoft.util;
 
 
 import java.security.MessageDigest;

@@ -314,12 +314,12 @@
         var $ = layui.$
             ,fly = layui.fly;
         //如果你是采用模版自带的编辑器，你需要开启以下语句来解析。
-        /*
+
          $('.detail-body').each(function(){
          var othis = $(this), html = othis.html();
          othis.html(fly.content(html));
          });
-         */
+
     });
 </script>
 

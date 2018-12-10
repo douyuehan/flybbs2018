@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +48,7 @@ public class JieController {
         HttpSession httpSession = request.getSession();
         User user = (User)httpSession.getAttribute("userinfo");
         topic.setUserid(user.getId());
+        topic.setCreateTime(new Date());
 
         int result = topicMapper.insertSelective(topic);
         if(result > 0)

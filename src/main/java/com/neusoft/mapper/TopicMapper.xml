@@ -207,4 +207,11 @@
       topic_category_id = #{topicCategoryId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getAllTopics" resultType="map">
+    select tab_topic.title,tab_user.nickname,tab_user.pic_path
+,tab_topic.create_time,tab_topic.kiss_num, tab_topic_category.name from tab_topic
+join tab_user on tab_topic.userid = tab_user.id
+join tab_topic_category on tab_topic.topic_category_id = tab_topic_category.id
+  </select>
 </mapper>

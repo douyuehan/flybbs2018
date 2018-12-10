@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,63 +20,7 @@
 </head>
 <body>
 
-<div class="fly-header layui-bg-black">
-    <div class="layui-container">
-        <a class="fly-logo" href="/">
-            <img src="../../res/images/logo.png" alt="layui">
-        </a>
-        <ul class="layui-nav fly-nav layui-hide-xs">
-            <li class="layui-nav-item layui-this">
-                <a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="../case/case.html"><i class="iconfont icon-iconmingxinganli"></i>案例</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>
-            </li>
-        </ul>
-
-        <ul class="layui-nav fly-nav-user">
-
-            <!-- 未登入的状态 -->
-            <!--
-            <li class="layui-nav-item">
-              <a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>
-            </li>
-            <li class="layui-nav-item">
-              <a href="user/login.html">登入</a>
-            </li>
-            <li class="layui-nav-item">
-              <a href="user/reg.html">注册</a>
-            </li>
-            <li class="layui-nav-item layui-hide-xs">
-              <a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>
-            </li>
-            <li class="layui-nav-item layui-hide-xs">
-              <a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" title="微博登入" class="iconfont icon-weibo"></a>
-            </li>
-             -->
-
-            <!-- 登入后的状态 -->
-            <li class="layui-nav-item">
-                <a class="fly-nav-avatar" href="javascript:;">
-                    <cite class="layui-hide-xs">贤心</cite>
-                    <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>
-                    <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
-                    <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
-                </a>
-                <dl class="layui-nav-child">
-                    <dd><a href="../user/set.html"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
-                    <dd><a href="../user/message.html"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>
-                    <dd><a href="../user/home.html"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>
-                    <hr style="margin: 5px 0;">
-                    <dd><a href="" style="text-align: center;">退出</a></dd>
-                </dl>
-            </li>
-        </ul>
-    </div>
-</div>
+<%@include file="../common/header.jsp"%>
 
 <div class="layui-container fly-marginTop">
     <div class="fly-panel" pad20 style="padding-top: 5px;">
@@ -88,19 +32,16 @@
                 </ul>
                 <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
                     <div class="layui-tab-item layui-show">
-                        <form action="" method="post">
+                        <form action="${pageContext.request.contextPath}/jie/doadd" method="post">
                             <div class="layui-row layui-col-space15 layui-form-item">
                                 <div class="layui-col-md3">
                                     <label class="layui-form-label">所在专栏</label>
                                     <div class="layui-input-block">
-                                        <select lay-verify="required" name="class" lay-filter="column">
+                                        <select lay-verify="required" name="topicCategoryId" lay-filter="column">
                                             <option></option>
-                                            <option value="0">提问</option>
-                                            <option value="99">分享</option>
-                                            <option value="100">讨论</option>
-                                            <option value="101">建议</option>
-                                            <option value="168">公告</option>
-                                            <option value="169">动态</option>
+                                            <c:forEach items="${categories}" var="category">
+                                                <option value="${category.id}">${category.name}</option>
+                                            </c:forEach>
                                         </select>
                                     </div>
                                 </div>
@@ -112,33 +53,33 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-row layui-col-space15 layui-form-item layui-hide" id="LAY_quiz">
-                                <div class="layui-col-md3">
-                                    <label class="layui-form-label">所属产品</label>
-                                    <div class="layui-input-block">
-                                        <select name="project">
-                                            <option></option>
-                                            <option value="layui">layui</option>
-                                            <option value="独立版layer">独立版layer</option>
-                                            <option value="独立版layDate">独立版layDate</option>
-                                            <option value="LayIM">LayIM</option>
-                                            <option value="Fly社区模板">Fly社区模板</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="layui-col-md3">
-                                    <label class="layui-form-label" for="L_version">版本号</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" id="L_version" value="" name="version" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                                <div class="layui-col-md6">
-                                    <label class="layui-form-label" for="L_browser">浏览器</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" id="L_browser"  value="" name="browser" placeholder="浏览器名称及版本，如：IE 11" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                            </div>
+                            <%--<div class="layui-row layui-col-space15 layui-form-item layui-hide" id="LAY_quiz">--%>
+                                <%--<div class="layui-col-md3">--%>
+                                    <%--<label class="layui-form-label">所属产品</label>--%>
+                                    <%--<div class="layui-input-block">--%>
+                                        <%--<select name="project">--%>
+                                            <%--<option></option>--%>
+                                            <%--<option value="layui">layui</option>--%>
+                                            <%--<option value="独立版layer">独立版layer</option>--%>
+                                            <%--<option value="独立版layDate">独立版layDate</option>--%>
+                                            <%--<option value="LayIM">LayIM</option>--%>
+                                            <%--<option value="Fly社区模板">Fly社区模板</option>--%>
+                                        <%--</select>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <%--<div class="layui-col-md3">--%>
+                                    <%--<label class="layui-form-label" for="L_version">版本号</label>--%>
+                                    <%--<div class="layui-input-block">--%>
+                                        <%--<input type="text" id="L_version" value="" name="version" autocomplete="off" class="layui-input">--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <%--<div class="layui-col-md6">--%>
+                                    <%--<label class="layui-form-label" for="L_browser">浏览器</label>--%>
+                                    <%--<div class="layui-input-block">--%>
+                                        <%--<input type="text" id="L_browser"  value="" name="browser" placeholder="浏览器名称及版本，如：IE 11" autocomplete="off" class="layui-input">--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
                             <div class="layui-form-item layui-form-text">
                                 <div class="layui-input-block">
                                     <textarea id="L_content" name="content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
@@ -148,7 +89,7 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label">悬赏飞吻</label>
                                     <div class="layui-input-inline" style="width: 190px;">
-                                        <select name="experience">
+                                        <select name="kissNum">
                                             <option value="20">20</option>
                                             <option value="30">30</option>
                                             <option value="50">50</option>

@@ -145,3 +145,10 @@ CREATE TABLE `tab_user_qiandao` (
 -- ----------------------------
 -- Records of tab_user_qiandao
 -- ----------------------------
+
+INSERT INTO `tab_topic_category` VALUES ('1', '提问');
+INSERT INTO `tab_topic_category` VALUES ('2', '分享');
+INSERT INTO `tab_topic_category` VALUES ('3', '讨论');
+INSERT INTO `tab_topic_category` VALUES ('4', '建议');
+INSERT INTO `tab_topic_category` VALUES ('5', '公告');
+INSERT INTO `tab_topic_category` VALUES ('6', '动态');

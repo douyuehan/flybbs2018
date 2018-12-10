@@ -55,4 +55,8 @@
     set name = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getAllCategories" resultType="TopicCategory">
+    select * from tab_topic_category
+  </select>
 </mapper>

@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -102,7 +102,12 @@
                     </div>
                     <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
                         <span style="padding-right: 10px; color: #FF7200">悬赏：${topic.kiss_num}飞吻</span>
-                        <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="add.html">编辑此贴</a></span>
+                        <c:if test="${!empty userinfo}">
+                            <c:if test="${userinfo.id == topic.userid}">
+                                <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="add.html">编辑此贴</a></span>
+                            </c:if>
+                        </c:if>
+
                     </div>
                 </div>
                 <div class="detail-body photos">

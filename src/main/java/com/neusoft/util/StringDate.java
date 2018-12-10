@@ -3,12 +3,19 @@ package com.neusoft.util;
 /**
  * Created by Administrator on 2018/12/10.
  */
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by ttc on 17-11-23.
  */
 public class StringDate {
+//    public static void main(String[] args) throws ParseException {
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        Date date = simpleDateFormat.parse("2018-12-10 11:06:18");
+//        System.out.println(getStringDate(date));
+//    }
     //参数date，传入帖子的创建时间
     //返回值 （一分钟前，二分钟前，一小时前，一天前，20170506）
     public static String getStringDate(Date date)

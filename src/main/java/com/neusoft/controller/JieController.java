@@ -7,8 +7,10 @@ import com.neusoft.domain.User;
 import com.neusoft.mapper.TopicCategoryMapper;
 import com.neusoft.mapper.TopicMapper;
 import com.neusoft.response.RegRespObj;
+import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/12/10.
@@ -40,7 +43,20 @@ public class JieController {
         modelAndView.setViewName("jie/add");
         return modelAndView;
     }
+    @RequestMapping("detail/{tid}")
+    public ModelAndView detail(@PathVariable Integer tid)
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        Map<String,Object> map = topicMapper.getTopicInfo(tid);
 
+        Date date = (Date)map.get("create_time");
+        String strDate = StringDate.getStringDate(date);
+        map.put("create_time",strDate);
+
+        modelAndView.setViewName("jie/detail");
+        modelAndView.addObject("topic",map);
+        return modelAndView;
+    }
     @RequestMapping("doadd")
     public void doadd(Topic topic, HttpServletResponse response, HttpServletRequest request) throws IOException {
         RegRespObj regRespObj = new RegRespObj();

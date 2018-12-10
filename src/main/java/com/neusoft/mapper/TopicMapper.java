@@ -21,4 +21,6 @@ public interface TopicMapper {
     int updateByPrimaryKey(Topic record);
 
     List<Map<String,Object>> getAllTopics();
+
+    Map<String,Object> getTopicInfo(int topicID);
 }

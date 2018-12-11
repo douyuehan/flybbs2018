@@ -23,17 +23,20 @@ public class IndexController {
     @RequestMapping("/")
     public ModelAndView index()
     {
-        List<Map<String,Object>> mapList = topicMapper.getAllTopics();
-        for(Map<String,Object> map : mapList)
-        {
-            Date date = (Date)map.get("create_time");
-            String strDate = StringDate.getStringDate(date);
-            map.put("create_time",strDate);
-        }
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
-        modelAndView.addObject("topics",mapList);
+        modelAndView.setViewName("page");
         return modelAndView;
+//        List<Map<String,Object>> mapList = topicMapper.getAllTopics();
+//        for(Map<String,Object> map : mapList)
+//        {
+//            Date date = (Date)map.get("create_time");
+//            String strDate = StringDate.getStringDate(date);
+//            map.put("create_time",strDate);
+//        }
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("index");
+//        modelAndView.addObject("topics",mapList);
+//        return modelAndView;
     }
 }
 

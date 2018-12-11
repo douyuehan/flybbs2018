@@ -195,4 +195,11 @@
     select * from tab_user where nickname=#{value};
   </select>
 
+  <select id="getTotalCounts" resultType="int">
+      select count(*) as num from tab_user
+  </select>
+
+  <select id="getPagedUser" parameterType="PageInfo" resultType="User">
+      select * from tab_user limit #{pageStart},#{pageSize}
+  </select>
 </mapper>

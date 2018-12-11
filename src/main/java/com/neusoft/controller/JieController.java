@@ -76,4 +76,23 @@ public class JieController {
 
         return;
     }
+
+    @RequestMapping("reply")
+    public void reply(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        RegRespObj regRespObj = new RegRespObj();
+        HttpSession httpSession = request.getSession();
+        Object object = httpSession.getAttribute("userinfo");
+        if(object != null)
+        {
+
+        }
+        else
+        {
+            regRespObj.setStatus(0);
+            regRespObj.setAction(request.getServletContext().getContextPath()+"/user/login");
+        }
+
+        response.getWriter().println(JSON.toJSONString(regRespObj));
+        return;
+    }
 }

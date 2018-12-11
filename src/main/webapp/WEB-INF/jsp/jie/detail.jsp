@@ -121,87 +121,61 @@
                 </fieldset>
 
                 <ul class="jieda" id="jieda">
-                    <li data-id="111" class="jieda-daan">
-                        <a name="item-1111111111"></a>
-                        <div class="detail-about detail-about-reply">
-                            <a class="fly-avatar" href="">
-                                <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">
-                            </a>
-                            <div class="fly-detail-user">
-                                <a href="" class="fly-link">
-                                    <cite>贤心</cite>
-                                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                                    <i class="layui-badge fly-badge-vip">VIP3</i>
+
+                    <c:forEach items="${comments}" var="comment">
+                        <li data-id="111" class="jieda-daan">
+                            <a name="item-1111111111"></a>
+                            <div class="detail-about detail-about-reply">
+                                <a class="fly-avatar" href="#">
+                                    <img src="${pageContext.request.contextPath}/res/uploadImgs/${comment.pic_path}" alt="${comment.nickname}">
                                 </a>
+                                <div class="fly-detail-user">
+                                    <a href="#" class="fly-link">
+                                        <cite>${comment.nickname}</cite>
+                                        <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                                        <i class="layui-badge fly-badge-vip">VIP${comment.vip_grade}</i>
+                                    </a>
 
-                                <span>(楼主)</span>
-                                <!--
-                                <span style="color:#5FB878">(管理员)</span>
-                                <span style="color:#FF9E3F">（社区之光）</span>
-                                <span style="color:#999">（该号已被封）</span>
-                                -->
+                                    <c:if test="${topic.userid == comment.userid}">
+                                        <span>(楼主)</span>
+                                    </c:if>
+
+                                    <!--
+                                    <span style="color:#5FB878">(管理员)</span>
+                                    <span style="color:#FF9E3F">（社区之光）</span>
+                                    <span style="color:#999">（该号已被封）</span>
+                                    -->
+                                </div>
+
+                                <div class="detail-hits">
+                                    <span>${comment.comment_time}</span>
+                                </div>
+
+                                <i class="iconfont icon-caina" title="最佳答案"></i>
                             </div>
-
-                            <div class="detail-hits">
-                                <span>2017-11-30</span>
+                            <div class="detail-body jieda-body photos">
+                                    ${comment.comment_content}
                             </div>
-
-                            <i class="iconfont icon-caina" title="最佳答案"></i>
-                        </div>
-                        <div class="detail-body jieda-body photos">
-                            <p>香菇那个蓝瘦，这是一条被采纳的回帖</p>
-                        </div>
-                        <div class="jieda-reply">
+                            <div class="jieda-reply">
               <span class="jieda-zan zanok" type="zan">
                 <i class="iconfont icon-zan"></i>
-                <em>66</em>
+                <em>${comment.like_num}</em>
               </span>
-                            <span type="reply">
+                                <span type="reply">
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
-                            <div class="jieda-admin">
-                                <span type="edit">编辑</span>
-                                <span type="del">删除</span>
-                                <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                                <div class="jieda-admin">
+                                    <span type="edit">编辑</span>
+                                    <span type="del">删除</span>
+                                    <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    </c:forEach>
 
-                    <li data-id="111">
-                        <a name="item-1111111111"></a>
-                        <div class="detail-about detail-about-reply">
-                            <a class="fly-avatar" href="">
-                                <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">
-                            </a>
-                            <div class="fly-detail-user">
-                                <a href="" class="fly-link">
-                                    <cite>贤心</cite>
-                                </a>
-                            </div>
-                            <div class="detail-hits">
-                                <span>2017-11-30</span>
-                            </div>
-                        </div>
-                        <div class="detail-body jieda-body photos">
-                            <p>蓝瘦那个香菇，这是一条没被采纳的回帖</p>
-                        </div>
-                        <div class="jieda-reply">
-              <span class="jieda-zan" type="zan">
-                <i class="iconfont icon-zan"></i>
-                <em>0</em>
-              </span>
-                            <span type="reply">
-                <i class="iconfont icon-svgmoban53"></i>
-                回复
-              </span>
-                            <div class="jieda-admin">
-                                <span type="edit">编辑</span>
-                                <span type="del">删除</span>
-                                <span class="jieda-accept" type="accept">采纳</span>
-                            </div>
-                        </div>
-                    </li>
+
+
 
                     <!-- 无数据时 -->
                     <!-- <li class="fly-none">消灭零回复</li> -->
@@ -216,7 +190,7 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <input type="hidden" name="jid" value="123">
+                            <input type="hidden" name="topicId" value="${topic.topic_id}">
                             <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
                         </div>
                     </form>
@@ -307,12 +281,12 @@
     <c:when test="${!empty userinfo}">
     layui.cache.user = {
         username: '${userinfo.nickname}'
-        ,uid: -1
-        ,avatar: '../../res/images/avatar/00.jpg'
+        ,uid: ${userinfo.id}
+        ,avatar: '${pageContext.request.contextPath}/res/uploadImgs/${userinfo.picPath}'
         ,experience: 83
         ,sex: '男'
     };
-        </c:when>
+    </c:when>
      <c:otherwise>
     layui.cache.user = {
         username: '游客'

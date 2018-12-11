@@ -1,9 +1,11 @@
 package com.neusoft.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.neusoft.domain.Comment;
 import com.neusoft.domain.Topic;
 import com.neusoft.domain.TopicCategory;
 import com.neusoft.domain.User;
+import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicCategoryMapper;
 import com.neusoft.mapper.TopicMapper;
 import com.neusoft.response.RegRespObj;
@@ -34,6 +36,9 @@ public class JieController {
 
     @Autowired
     TopicMapper topicMapper;
+
+    @Autowired
+    CommentMapper commentMapper;
     @RequestMapping("add")
     public ModelAndView add()
     {
@@ -53,8 +58,18 @@ public class JieController {
         String strDate = StringDate.getStringDate(date);
         map.put("create_time",strDate);
 
+
+        List<Map<String,Object>> mapList = commentMapper.getCommentsByTopicID(tid);
+        for(Map<String,Object> map2 : mapList)
+        {
+            Date date2 = (Date)map2.get("comment_time");
+            String strDate2 = StringDate.getStringDate(date2);
+            map2.put("comment_time",strDate2);
+        }
+
         modelAndView.setViewName("jie/detail");
         modelAndView.addObject("topic",map);
+        modelAndView.addObject("comments",mapList);
         return modelAndView;
     }
     @RequestMapping("doadd")
@@ -78,12 +93,17 @@ public class JieController {
     }
 
     @RequestMapping("reply")
-    public void reply(HttpServletRequest request,HttpServletResponse response) throws IOException {
+    public void reply(Comment comment,String content, HttpServletRequest request, HttpServletResponse response) throws IOException {
         RegRespObj regRespObj = new RegRespObj();
         HttpSession httpSession = request.getSession();
-        Object object = httpSession.getAttribute("userinfo");
-        if(object != null)
+        User user = (User)httpSession.getAttribute("userinfo");
+        if(user != null)
         {
+            comment.setCommentContent(content);
+            comment.setUserId(user.getId());
+            comment.setCommentTime(new Date());
+            commentMapper.insertSelective(comment);
+            regRespObj.setStatus(0);
 
         }
         else

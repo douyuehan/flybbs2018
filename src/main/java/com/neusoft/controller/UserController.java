@@ -6,10 +6,12 @@ import com.neusoft.mapper.UserMapper;
 import com.neusoft.response.RegRespObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -84,6 +86,25 @@ public class UserController {
     public String login()
     {
         return "user/login";
+    }
+
+    @RequestMapping("jumphome/{username}")
+    public ModelAndView jumphome(@PathVariable String username)
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        User user = userMapper.selectByNickname(username);
+        modelAndView.addObject("user",user);
+        modelAndView.setViewName("user/home");
+        return modelAndView;
+    }
+    @RequestMapping("home/{uid}")
+    public ModelAndView home(@PathVariable Integer uid)
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        User user = userMapper.selectByPrimaryKey(uid);
+        modelAndView.addObject("user",user);
+        modelAndView.setViewName("user/home");
+        return modelAndView;
     }
     @RequestMapping("dologin")
     @ResponseBody

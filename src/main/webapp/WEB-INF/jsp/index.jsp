@@ -204,7 +204,7 @@
                 <ul class="fly-list">
                     <c:forEach items="${topics}" var="topic">
                         <li>
-                            <a href="user/home.html" class="fly-avatar">
+                            <a href="${pageContext.request.contextPath}/user/home/${topic.userid}" class="fly-avatar">
                                 <c:choose>
                                     <c:when test="${topic.pic_path != ''}">
                                         <img src="${pageContext.request.contextPath}/res/uploadImgs/${topic.pic_path}" alt="${topic.nickname}">

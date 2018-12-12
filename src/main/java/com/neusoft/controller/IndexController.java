@@ -23,9 +23,12 @@ public class IndexController {
     @RequestMapping("/")
     public ModelAndView index()
     {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("page");
-        return modelAndView;
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("page");
+//        return modelAndView;
+
+
+
 //        List<Map<String,Object>> mapList = topicMapper.getAllTopics();
 //        for(Map<String,Object> map : mapList)
 //        {
@@ -33,10 +36,10 @@ public class IndexController {
 //            String strDate = StringDate.getStringDate(date);
 //            map.put("create_time",strDate);
 //        }
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("index");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("index");
 //        modelAndView.addObject("topics",mapList);
-//        return modelAndView;
+        return modelAndView;
     }
 }
 

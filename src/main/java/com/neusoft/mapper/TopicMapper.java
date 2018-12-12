@@ -1,5 +1,6 @@
 package com.neusoft.mapper;
 
+import com.neusoft.domain.PageInfo;
 import com.neusoft.domain.Topic;
 
 import java.util.List;
@@ -23,4 +24,8 @@ public interface TopicMapper {
     List<Map<String,Object>> getAllTopics();
 
     Map<String,Object> getTopicInfo(int topicID);
+
+    int getTopicTotal();
+
+    List<Map<String,Object>> getPagedTopics(PageInfo pageInfo);
 }

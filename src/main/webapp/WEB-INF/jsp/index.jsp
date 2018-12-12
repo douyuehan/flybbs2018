@@ -201,49 +201,26 @@
           </span>
                 </div>
 
-                <ul class="fly-list">
-                    <c:forEach items="${topics}" var="topic">
-                        <li>
-                            <a href="${pageContext.request.contextPath}/user/home/${topic.userid}" class="fly-avatar">
-                                <c:choose>
-                                    <c:when test="${topic.pic_path != ''}">
-                                        <img src="${pageContext.request.contextPath}/res/uploadImgs/${topic.pic_path}" alt="${topic.nickname}">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
-                                    </c:otherwise>
-                                </c:choose>
-                            </a>
-                            <h2>
-                                <a class="layui-badge">${topic.name}</a>
-                                <a href="${pageContext.request.contextPath}/jie/detail/${topic.id}">${topic.title}</a>
-                            </h2>
-                            <div class="fly-list-info">
-                                <a href="user/home.html" link>
-                                    <cite>${topic.nickname}</cite>
-                                    <!--
-                                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                                    <i class="layui-badge fly-badge-vip">VIP3</i>
-                                    -->
-                                </a>
-                                <span>${topic.create_time}</span>
+                <ul class="fly-list" id="page_topics">
 
-                                <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"><i class="iconfont icon-kiss"></i> ${topic.kiss_num}</span>
-                                <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
-                                <span class="fly-list-nums">
-                <i class="iconfont icon-pinglun1" title="回答"></i> 66
-              </span>
-                            </div>
-                            <div class="fly-list-badge">
-                                <!--<span class="layui-badge layui-bg-red">精帖</span>-->
-                            </div>
-                        </li>
-                    </c:forEach>
+
+
+
+
+
+
+
+
+
+
+
+
                 </ul>
-                <div style="text-align: center">
-                    <div class="laypage-main">
-                        <a href="jie/index.html" class="laypage-next">更多求解</a>
-                    </div>
+
+                <div style="text-align: center" id="laypage-main">
+                    <%--<div class="laypage-main" >--%>
+                        <%--&lt;%&ndash;<a href="jie/index.html" class="laypage-next">更多求解</a>&ndash;%&gt;--%>
+                    <%--</div>--%>
                 </div>
 
             </div>
@@ -446,6 +423,46 @@
     </p>
 </div>
 
+<script id="topic_list" type="text/html">
+
+
+    {{#  layui.each(d.topics,function(index,topic){   }}
+        <li>
+            <a href="${pageContext.request.contextPath}/user/home/{{topic.userid}}" class="fly-avatar">
+                {{# if(!topic.pic_path){ }}
+                        <img src="${pageContext.request.contextPath}/res/uploadImgs/{{topic.pic_path}}" alt="{{topic.nickname}}">
+                {{#    }else{  }}
+                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+                {{#   }  }}
+            </a>
+            <h2>
+                <a class="layui-badge">{{topic.name}}</a>
+                <a href="${pageContext.request.contextPath}/jie/detail/{{topic.id}}">{{topic.title}}</a>
+            </h2>
+            <div class="fly-list-info">
+                <a href="user/home.html" link>
+                    <cite>{{topic.nickname}}</cite>
+                    <!--
+                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                    <i class="layui-badge fly-badge-vip">VIP3</i>
+                    -->
+                </a>
+                <span>{{topic.create_time}}</span>
+
+                <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"><i class="iconfont icon-kiss"></i> {{topic.kiss_num}}</span>
+                <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
+                <span class="fly-list-nums">
+                <i class="iconfont icon-pinglun1" title="回答"></i> 66
+              </span>
+            </div>
+            <div class="fly-list-badge">
+                <!--<span class="layui-badge layui-bg-red">精帖</span>-->
+            </div>
+        </li>
+    {{# });   }}
+</script>
+
+
 <script src="${pageContext.request.contextPath}/res/layui/layui.js"></script>
 <script>
     layui.cache.page = '';
@@ -456,12 +473,67 @@
         ,experience: 83
         ,sex: '男'
     };
+
+    function fillTopicList(jsonData) {
+        //模板替换--把jsonData绑定到topic_list模板上
+        var tpl = topic_list.innerHTML;
+
+        layui.laytpl(tpl).render(jsonData,function (html) {
+//            alert(html)
+            document.getElementById('page_topics').innerHTML = html;
+        })
+
+    }
+
+    function getPagedTopic(pageInfo,jq) {
+        var $ = jq;
+        if(!pageInfo)
+        {
+            var pageInfo = {};
+            pageInfo.pageIndex = 1;
+            pageInfo.pageSize = 2;
+        }
+
+        $.ajax({
+            url:'${pageContext.request.contextPath}/topic/get_paged_topic',
+            type:'post',
+            dataType:'json',
+            data:pageInfo,
+            success:function (res) {
+//                alert(res.topics[0].title);
+                //1.渲染分页组件
+                layui.laypage.render({
+                    elem: 'laypage-main' //注意，这里的 test1 是 ID，不用加 # 号
+                    ,limit:pageInfo.pageSize
+                    ,curr:pageInfo.pageIndex
+                    ,count:res.num//数据总数，从服务端得到
+                    ,first:"首页"
+                    ,last:"尾页"
+                    ,jump:function (obj,fisrt) {
+                        if(!fisrt)
+                        {
+                            pageInfo.pageSize = obj.limit;
+                            pageInfo.pageIndex = obj.curr;
+                            getPagedTopic(pageInfo,$);
+                        }
+                    }
+                })
+                //2.渲染帖子列表
+                fillTopicList(res);
+            }
+        })
+    }
+
     layui.config({
         version: "3.0.0"
         ,base: '${pageContext.request.contextPath}/res/mods/' //这里实际使用时，建议改成绝对路径
     }).extend({
         fly: 'index'
-    }).use('fly');
+    }).use(['fly','laypage','laytpl'],function () {
+        var jq = layui.jquery;
+        //请求第一页的数据（每页2条）
+        getPagedTopic(null,jq);
+    });
 </script>
 
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_30088308'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "w.cnzz.com/c.php%3Fid%3D30088308' type='text/javascript'%3E%3C/script%3E"));</script>

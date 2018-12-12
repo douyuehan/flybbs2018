@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+
+
         //判断用户是否登录
         //如果登录，则放行，否则，转发到登录页面
         HttpSession httpSession = httpServletRequest.getSession();

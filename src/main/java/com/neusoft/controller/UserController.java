@@ -82,6 +82,9 @@ public class UserController {
         request.getSession().invalidate();
         return "redirect:" + request.getServletContext().getContextPath() +"/";
     }
+
+
+
     @RequestMapping("login")
     public String login()
     {
@@ -110,6 +113,9 @@ public class UserController {
     @ResponseBody
     public RegRespObj dologin(User user,HttpServletRequest request)
     {
+        HttpSession httpSession = request.getSession();
+        String referer = (String)httpSession.getAttribute("reply_referer");
+        httpSession.removeAttribute("reply_referer");
         //查询数据库，用email和密码作为条件查询，如果查出来0条记录，登录失败
         //否则，登录成功
         user.setPasswd(MD5Utils.getPwd(user.getPasswd()));
@@ -122,10 +128,10 @@ public class UserController {
         }
         else
         {
-            HttpSession httpSession = request.getSession();
+
             httpSession.setAttribute("userinfo",userResult);
             regRespObj.setStatus(0);
-            regRespObj.setAction(request.getServletContext().getContextPath() + "/");
+            regRespObj.setAction(referer);
         }
 
         return regRespObj;

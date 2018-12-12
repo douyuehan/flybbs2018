@@ -105,9 +105,17 @@ public class JieController {
             commentMapper.insertSelective(comment);
             regRespObj.setStatus(0);
 
+
+            //更新topic的评论数字段
+            Topic topic = topicMapper.selectByPrimaryKey(comment.getTopicId());
+            int comment_num = topic.getCommentNum();
+            topic.setCommentNum(comment_num + 1);
+            topicMapper.updateByPrimaryKeySelective(topic);
         }
         else
         {
+            String referer = request.getHeader("Referer");
+            httpSession.setAttribute("reply_referer",referer);
             regRespObj.setStatus(0);
             regRespObj.setAction(request.getServletContext().getContextPath()+"/user/login");
         }

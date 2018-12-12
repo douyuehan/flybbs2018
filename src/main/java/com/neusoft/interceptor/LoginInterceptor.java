@@ -15,9 +15,12 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
 
+        String strUrl = httpServletRequest.getRequestURL().toString();
+
         //判断用户是否登录
         //如果登录，则放行，否则，转发到登录页面
         HttpSession httpSession = httpServletRequest.getSession();
+        httpSession.setAttribute("referer",strUrl);
         Object object = httpSession.getAttribute("userinfo");
         if(object != null)
         {

@@ -114,8 +114,8 @@ public class UserController {
     public RegRespObj dologin(User user,HttpServletRequest request)
     {
         HttpSession httpSession = request.getSession();
-        String referer = (String)httpSession.getAttribute("reply_referer");
-        httpSession.removeAttribute("reply_referer");
+        String referer = (String)httpSession.getAttribute("referer");
+        httpSession.removeAttribute("referer");
         //查询数据库，用email和密码作为条件查询，如果查出来0条记录，登录失败
         //否则，登录成功
         user.setPasswd(MD5Utils.getPwd(user.getPasswd()));
@@ -131,7 +131,15 @@ public class UserController {
 
             httpSession.setAttribute("userinfo",userResult);
             regRespObj.setStatus(0);
-            regRespObj.setAction(referer);
+            if(referer == null)
+            {
+                regRespObj.setAction(request.getServletContext().getContextPath() + "/");
+            }
+            else
+            {
+                regRespObj.setAction(referer);
+            }
+
         }
 
         return regRespObj;

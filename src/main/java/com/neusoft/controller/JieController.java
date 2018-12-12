@@ -115,7 +115,7 @@ public class JieController {
         else
         {
             String referer = request.getHeader("Referer");
-            httpSession.setAttribute("reply_referer",referer);
+            httpSession.setAttribute("referer",referer);
             regRespObj.setStatus(0);
             regRespObj.setAction(request.getServletContext().getContextPath()+"/user/login");
         }

@@ -233,6 +233,7 @@ where tab_topic.id = #{value}
 ,tab_topic.create_time,tab_topic.kiss_num, tab_topic_category.name,tab_topic.comment_num from tab_topic
 join tab_user on tab_topic.userid = tab_user.id
 join tab_topic_category on tab_topic.topic_category_id = tab_topic_category.id
+order by tab_topic.create_time desc
 limit #{pageStart},#{pageSize}
   </select>
 </mapper>

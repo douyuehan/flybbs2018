@@ -22,12 +22,11 @@ import java.util.Map;
 public class PageController {
     @Autowired
     UserMapper userMapper;
-    @RequestMapping("getpagedata/{pageindex}")
-    public void getcount(@PathVariable Integer pageindex, HttpServletResponse response) throws IOException {
+    @RequestMapping("getpagedata")
+    public void getcount(PageInfo pageInfo, HttpServletResponse response) throws IOException {
+
+
         int num = userMapper.getTotalCounts();
-        PageInfo pageInfo = new PageInfo();
-        pageInfo.setPageIndex(pageindex);
-        pageInfo.setPageSize(2);
 
         List<User> userList = userMapper.getPagedUser(pageInfo);
 

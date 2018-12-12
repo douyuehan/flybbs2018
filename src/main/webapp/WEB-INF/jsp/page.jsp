@@ -11,61 +11,85 @@
     <title>Title</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/layui/css/layui.css" media="all">
     <script src="${pageContext.request.contextPath}/res/layui/layui.all.js"></script>
+    <script src="${pageContext.request.contextPath}/res/jquery-3.3.1.js"></script>
     <script>
-        var isOk = false;
-        function getPageData(pageIndex) {
-            var req = new XMLHttpRequest();
-            req.open('get','${pageContext.request.contextPath}/getpagedata/'+pageIndex,true);
-            req.send();
-            req.onload = function () {
-//                alert(req.responseText)
-                var jsonObj = JSON.parse(req.responseText);
-                var laypage = layui.laypage;
-                //执行一个laypage实例
-                if(isOk == false)
-                {
+
+        function fillCurrentPageData(jsonObj) {
+            var getTpl = demo.innerHTML;
+            var view = document.getElementById('data');
+
+            layui.laytpl(getTpl).render(jsonObj, function(html){
+                view.innerHTML = html;
+            });
+        }
+
+        function getPageData(pageInfo) {
+
+            if(!pageInfo)
+            {
+                pageInfo = {};
+                pageInfo.pageSize = 3;
+                pageInfo.pageIndex = 1;
+            }
+
+            $.ajax({
+                url:'${pageContext.request.contextPath}/getpagedata/',
+                type:'post',
+                dataType:'json',
+                data:pageInfo,
+                success:function (jsonObj) {
+                    //执行一个laypage实例
+                    var laypage = layui.laypage;
+
                     laypage.render({
                         elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
-                        ,limit:2
+                        ,limit:pageInfo.pageSize
+                        ,curr:pageInfo.pageIndex
                         ,count:jsonObj.total//数据总数，从服务端得到
+                        ,first:"首页"
+                        ,last:"尾页"
                         ,jump: function(obj, first){
                             //obj包含了当前分页的所有参数，比如：
 //                        console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
 //                        console.log(obj.limit); //得到每页显示的条数
                             if(!first)
                             {
-                                getPageData(obj.curr);
+                                pageInfo.pageIndex = obj.curr;
+                                pageInfo.pageSize = obj.limit;
+                                getPageData(pageInfo);
                             }
                         }
                     });
-                    isOk = true;
+
+                    //填充当前页的数据
+                    fillCurrentPageData(jsonObj);
                 }
-
-
-                var getTpl = demo.innerHTML;
-                var view = document.getElementById('data');
-
-                layui.laytpl(getTpl).render(jsonObj, function(html){
-                    view.innerHTML = html;
-                });
-            }
+            })
         }
 
-        window.onload = function () {
-            getPageData(1);
-        }
+        $(function () {
+            getPageData();
+        })
+
     </script>
 </head>
 <body>
 <script id="demo" type="text/html">
-    <ul>
+    <table>
+        <tr>
+            <td>昵称</td>
+            <td>邮箱</td>
+        </tr>
         {{#  layui.each(d.datas, function(index, item){ }}
-        <li>
-            {{item.nickname}}
-        </li>
+        <tr>
+            <td>{{item.nickname}}</td>
+            <td>{{item.email}}</td>
+        </tr>
         {{#  }); }}
-    </ul>
+    </table>
 </script>
+
+<input type="text">
 
 <div id="data">
 
@@ -75,3 +99,5 @@
 </div>
 </body>
 </html>
+
+

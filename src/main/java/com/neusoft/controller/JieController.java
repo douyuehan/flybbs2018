@@ -40,12 +40,13 @@ public class JieController {
     @Autowired
     CommentMapper commentMapper;
 
-    @RequestMapping("index/{cid}")
-    public ModelAndView index(@PathVariable Integer cid)
+    @RequestMapping("index/{cid}/{typeid}")
+    public ModelAndView index(@PathVariable Integer cid,@PathVariable Integer typeid)
     {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jie/index");
         modelAndView.addObject("cid",cid);
+        modelAndView.addObject("typeid",typeid);
         return modelAndView;
     }
 

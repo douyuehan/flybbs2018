@@ -27,18 +27,9 @@ public class TopicController {
     @RequestMapping("get_paged_topic")
     public void getPagedTopic(PageInfo pageInfo, HttpServletResponse response) throws IOException {
 
-        int total = 0;
-        List<Map<String,Object>> mapList;
-        if(pageInfo.getCid() == 0)
-        {
-            total = topicMapper.getTopicTotal();
-            mapList = topicMapper.getPagedTopics(pageInfo);
-        }
-        else
-        {
-            total = topicMapper.getTopicByCategoryID(pageInfo.getCid());
-            mapList = topicMapper.getPagedTopicsByCategoryID(pageInfo);
-        }
+        int total = topicMapper.getTopicTotal(pageInfo);
+        List<Map<String,Object>> mapList = topicMapper.getPagedTopics(pageInfo);
+
 
 
         for(Map<String,Object> map : mapList)

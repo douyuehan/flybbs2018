@@ -31,14 +31,14 @@
         <div class="layui-col-md8">
             <div class="fly-panel" style="margin-bottom: 0;">
 
-                <div class="fly-panel-title fly-filter">
-                    <a href="" class="layui-this">综合</a>
+                <div class="fly-panel-title fly-filter" id="topic-type">
+                    <a href="${pageContext.request.contextPath}/jie/index/${cid}/0" class="layui-this">综合</a>
                     <span class="fly-mid"></span>
-                    <a href="">未结</a>
+                    <a href="${pageContext.request.contextPath}/jie/index/${cid}/1">未结</a>
                     <span class="fly-mid"></span>
-                    <a href="">已结</a>
+                    <a href="${pageContext.request.contextPath}/jie/index/${cid}/2">已结</a>
                     <span class="fly-mid"></span>
-                    <a href="">精华</a>
+                    <a href="${pageContext.request.contextPath}/jie/index/${cid}/3">精华</a>
                     <span class="fly-filter-right layui-hide-xs">
             <a href="" class="layui-this">按最新</a>
             <span class="fly-mid"></span>
@@ -215,6 +215,7 @@
             pageInfo.pageIndex = 1;
             pageInfo.pageSize = 2;
             pageInfo.cid = ${cid};
+            pageInfo.typeid = ${typeid};
         }
 
         $.ajax({
@@ -238,6 +239,7 @@
                             pageInfo.pageSize = obj.limit;
                             pageInfo.pageIndex = obj.curr;
                             pageInfo.cid = ${cid};
+                            pageInfo.typeid = ${typeid};
                             getPagedTopic(pageInfo,$);
                         }
                     }
@@ -255,8 +257,15 @@
         fly: 'index'
     }).use(['fly','laypage','laytpl'],function () {
         var jq = layui.jquery;
+        var $ = layui.jquery;
         //请求第一页的数据（每页2条）
         getPagedTopic(null,jq);
+
+        $('#topic-type').find('a').each(function (index,item) {
+            $(item).click(function () {
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+        })
     });
 </script>
 

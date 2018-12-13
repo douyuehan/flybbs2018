@@ -8,6 +8,15 @@ public class PageInfo {
     int pageSize;
     int pageStart;
     int cid;
+    int typeid;
+
+    public int getTypeid() {
+        return typeid;
+    }
+
+    public void setTypeid(int typeid) {
+        this.typeid = typeid;
+    }
 
     public int getCid() {
         return cid;

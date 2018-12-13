@@ -224,9 +224,29 @@ where tab_topic.id = #{value}
 
   </select>
 
-  <select id="getTopicTotal" resultType="int">
+  <sql id="topic_condition">
+    <where>
+      <if test="cid != null and cid != 0">
+        and tab_topic.topic_category_id = #{cid}
+      </if>
+      <if test="typeid != null and typeid != 0">
+        <if test="typeid == 1">
+          and tab_topic.is_end = 0
+        </if>
+        <if test="typeid == 2">
+          and tab_topic.is_end = 1
+        </if>
+        <if test="typeid == 3">
+          and tab_topic.is_good = 1
+        </if>
+      </if>
+    </where>
+  </sql>
+  <select id="getTopicTotal" resultType="int" parameterType="PageInfo">
      select count(*) from tab_topic
+     <include refid="topic_condition"></include>
   </select>
+
   <select id="getTopicByCategoryID" parameterType="int" resultType="int">
     select count(*) from tab_topic where tab_topic.topic_category_id = #{value}
   </select>
@@ -236,18 +256,11 @@ where tab_topic.id = #{value}
 ,tab_topic.create_time,tab_topic.kiss_num, tab_topic_category.name,tab_topic.comment_num from tab_topic
 join tab_user on tab_topic.userid = tab_user.id
 join tab_topic_category on tab_topic.topic_category_id = tab_topic_category.id
+    <include refid="topic_condition"></include>
 order by tab_topic.create_time desc
 limit #{pageStart},#{pageSize}
   </select>
-  <select id="getPagedTopicsByCategoryID" parameterType="PageInfo" resultType="map">
-    select tab_topic.id,tab_topic.title,tab_user.nickname,tab_user.id as userid,tab_user.pic_path
-    ,tab_topic.create_time,tab_topic.kiss_num, tab_topic_category.name,tab_topic.comment_num from tab_topic
-    join tab_user on tab_topic.userid = tab_user.id
-    join tab_topic_category on tab_topic.topic_category_id = tab_topic_category.id
-    where tab_topic.topic_category_id = #{cid}
-    order by tab_topic.create_time desc
-    limit #{pageStart},#{pageSize}
-  </select>
+
 
   <select id="getTopTopics" resultType="map">
     select tab_topic.id,tab_topic.title,tab_user.nickname,tab_user.id as userid,tab_user.pic_path

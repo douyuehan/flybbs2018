@@ -7,6 +7,15 @@ public class PageInfo {
     int pageIndex;
     int pageSize;
     int pageStart;
+    int cid;
+
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
 
     public int getPageStart() {
         return pageStart;

@@ -28,7 +28,7 @@ public class IndexController {
 //        return modelAndView;
 
 
-
+        //置顶帖子
         List<Map<String,Object>> mapList = topicMapper.getTopTopics();
         for(Map<String,Object> map : mapList)
         {

@@ -152,3 +152,6 @@ INSERT INTO `tab_topic_category` VALUES ('3', '讨论');
 INSERT INTO `tab_topic_category` VALUES ('4', '建议');
 INSERT INTO `tab_topic_category` VALUES ('5', '公告');
 INSERT INTO `tab_topic_category` VALUES ('6', '动态');
+
+
+alter table tab_user add COLUMN isadmin int(1) NOT NULL DEFAULT 0

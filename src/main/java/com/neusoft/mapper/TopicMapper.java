@@ -28,4 +28,6 @@ public interface TopicMapper {
     int getTopicTotal();
 
     List<Map<String,Object>> getPagedTopics(PageInfo pageInfo);
+
+    List<Map<String,Object>> getTopTopics();
 }

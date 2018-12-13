@@ -41,6 +41,7 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         modelAndView.addObject("top_topics",mapList);
+        modelAndView.addObject("typeid",0);
         return modelAndView;
     }
 }

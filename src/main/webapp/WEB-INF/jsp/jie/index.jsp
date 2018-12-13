@@ -213,7 +213,7 @@
         {
             var pageInfo = {};
             pageInfo.pageIndex = 1;
-            pageInfo.pageSize = 2;
+            pageInfo.pageSize = 10;
             pageInfo.cid = ${cid};
             pageInfo.typeid = ${typeid};
         }
@@ -261,11 +261,7 @@
         //请求第一页的数据（每页2条）
         getPagedTopic(null,jq);
 
-        $('#topic-type').find('a').each(function (index,item) {
-            $(item).click(function () {
-                $(this).addClass('layui-this').siblings().removeClass('layui-this');
-            })
-        })
+        $('#topic-type').find('a').eq(${typeid}).addClass('layui-this').siblings().removeClass('layui-this');
     });
 </script>
 

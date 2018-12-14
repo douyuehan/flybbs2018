@@ -63,10 +63,12 @@
 
                     <c:choose>
                         <c:when test="${topic.is_end == 0}">
-                            <span class="layui-badge" style="background-color: #999;">未结</span>
+                            <span id = "not_end" class="layui-badge" style="background-color: #999;">未结</span>
+                            <span id = "already_end"class="layui-badge" style="background-color: #5FB878;display: none">已结</span>
                         </c:when>
                         <c:otherwise>
-                            <span class="layui-badge" style="background-color: #5FB878;">已结</span>
+                            <span id = "not_end" class="layui-badge" style="background-color: #999;display: none">未结</span>
+                            <span id = "already_end"class="layui-badge" style="background-color: #5FB878;">已结</span>
                         </c:otherwise>
                     </c:choose>
 

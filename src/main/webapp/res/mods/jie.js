@@ -170,6 +170,8 @@ layui.define('fly', function(exports){
             $('.jieda-accept').remove();
             li.addClass('jieda-daan');
             li.find('.detail-about').append('<i class="iconfont icon-caina" title="最佳答案"></i>');
+            $('#not_end').hide();
+            $('#already_end').show();
           } else {
             layer.msg(res.msg);
           }

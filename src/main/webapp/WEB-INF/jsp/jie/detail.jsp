@@ -199,7 +199,17 @@
                                     ${comment.comment_content}
                             </div>
                             <div class="jieda-reply">
-              <span class="jieda-zan" type="zan">
+<%--小手是灰的时候，代表当前用户没有对该条评论点过赞，点击小手，小手变红，赞数加1--%>
+<%--小手是红的时候，代表当前用户对该条评论点过赞，点击小手，小手变灰，赞数减1--%>
+              <c:choose>
+                  <c:when test="${comment.isagree > 0}">
+                        <span class="jieda-zan zanok" type="zan">
+                  </c:when>
+                  <c:otherwise>
+                        <span class="jieda-zan" type="zan">
+                  </c:otherwise>
+              </c:choose>
+
                 <i class="iconfont icon-zan"></i>
                 <em>${comment.like_num}</em>
               </span>

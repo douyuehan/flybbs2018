@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ public class JieController {
         return modelAndView;
     }
     @RequestMapping("detail/{tid}")
-    public ModelAndView detail(@PathVariable Integer tid)
+    public ModelAndView detail(@PathVariable Integer tid, HttpSession httpSession)
     {
         ModelAndView modelAndView = new ModelAndView();
         Map<String,Object> map = topicMapper.getTopicInfo(tid);
@@ -70,7 +71,23 @@ public class JieController {
         map.put("create_time",strDate);
 
 
-        List<Map<String,Object>> mapList = commentMapper.getCommentsByTopicID(tid);
+
+
+        //3.该帖的评论的赞的信息得到
+        User user = (User)httpSession.getAttribute("userinfo");
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("topicid",tid);
+        if(user == null)
+        {
+            params.put("userid",0);
+        }
+        else
+        {
+            params.put("userid",user.getId());
+        }
+
+        List<Map<String,Object>> mapList = commentMapper.getCommentsByTopicID(params);
         for(Map<String,Object> map2 : mapList)
         {
             Date date2 = (Date)map2.get("comment_time");

@@ -8,6 +8,7 @@ import com.neusoft.domain.User;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicCategoryMapper;
 import com.neusoft.mapper.TopicMapper;
+import com.neusoft.mapper.UserMapper;
 import com.neusoft.response.RegRespObj;
 import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class JieController {
 
     @Autowired
     CommentMapper commentMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @RequestMapping("index/{cid}/{typeid}")
     public ModelAndView index(@PathVariable Integer cid,@PathVariable Integer typeid)
@@ -63,6 +66,12 @@ public class JieController {
     @RequestMapping("detail/{tid}")
     public ModelAndView detail(@PathVariable Integer tid, HttpSession httpSession)
     {
+
+        //帖子的阅读数量加一
+        Topic topic = topicMapper.selectByPrimaryKey(tid);
+        topic.setViewTimes(topic.getViewTimes() + 1);
+        topicMapper.updateByPrimaryKeySelective(topic);
+
         ModelAndView modelAndView = new ModelAndView();
         Map<String,Object> map = topicMapper.getTopicInfo(tid);
 
@@ -104,20 +113,32 @@ public class JieController {
     public void doadd(Topic topic, HttpServletResponse response, HttpServletRequest request) throws IOException {
         RegRespObj regRespObj = new RegRespObj();
 
+
         HttpSession httpSession = request.getSession();
         User user = (User)httpSession.getAttribute("userinfo");
         topic.setUserid(user.getId());
         topic.setCreateTime(new Date());
 
-        int result = topicMapper.insertSelective(topic);
-        if(result > 0)
+
+        if(topic.getKissNum() > user.getKissNum())
         {
-            regRespObj.setStatus(0);
-            regRespObj.setAction(request.getServletContext().getContextPath() + "/");
-            response.getWriter().println(JSON.toJSONString(regRespObj));
+            regRespObj.setStatus(1);
+            regRespObj.setMsg("飞吻不够");
+        }
+        else
+        {
+            int result = topicMapper.insertSelective(topic);
+            user.setKissNum(user.getKissNum() - topic.getKissNum());
+            userMapper.updateByPrimaryKeySelective(user);
+            if(result > 0)
+            {
+                regRespObj.setStatus(0);
+                regRespObj.setAction(request.getServletContext().getContextPath() + "/");
+
+            }
         }
 
-        return;
+        response.getWriter().println(JSON.toJSONString(regRespObj));
     }
 
     @RequestMapping("reply")

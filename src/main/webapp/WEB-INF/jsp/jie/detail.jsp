@@ -80,12 +80,12 @@
 
 
                     <span class="fly-list-nums">
-            <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> 66</a>
-            <i class="iconfont" title="人气">&#xe60b;</i> 99999
+            <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> ${topic.comment_num}</a>
+            <i class="iconfont" title="人气">&#xe60b;</i> ${topic.view_times}
           </span>
                 </div>
                 <div class="detail-about">
-                    <a class="fly-avatar" href="../user/home.html">
+                    <a class="fly-avatar" href="${pageContext.request.contextPath}/user/home/${topic.userid}">
                         <c:choose>
                             <c:when test="${topic.pic_path != ''}">
                                 <img src="${pageContext.request.contextPath}/res/uploadImgs/${topic.pic_path}" alt="${topic.nickname}">
@@ -96,7 +96,7 @@
                         </c:choose>
                     </a>
                     <div class="fly-detail-user">
-                        <a href="../user/home.html" class="fly-link">
+                        <a href="${pageContext.request.contextPath}/user/home/${topic.userid}" class="fly-link">
                             <cite>${topic.nickname}</cite>
                             <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
                             <i class="layui-badge fly-badge-vip">VIP3</i>
@@ -129,7 +129,7 @@
                         <li data-id="${comment.id}" class="jieda-daan">
                             <a name="item-1111111111"></a>
                             <div class="detail-about detail-about-reply">
-                                <a class="fly-avatar" href="#">
+                                <a class="fly-avatar" href="${pageContext.request.contextPath}/user/home/${comment.userid}">
 
                                     <c:choose>
                                         <c:when test="${comment.pic_path != ''}">
@@ -142,7 +142,7 @@
                                 </a>
 
                                 <div class="fly-detail-user">
-                                    <a href="#" class="fly-link">
+                                    <a href="${pageContext.request.contextPath}/user/home/${comment.userid}" class="fly-link">
                                         <cite>${comment.nickname}</cite>
                                         <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
                                         <i class="layui-badge fly-badge-vip">VIP${comment.vip_grade}</i>

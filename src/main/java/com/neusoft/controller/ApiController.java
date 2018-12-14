@@ -8,6 +8,7 @@ import com.neusoft.domain.UserCommentAgree;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
 import com.neusoft.mapper.UserCommentAgreeMapper;
+import com.neusoft.mapper.UserMapper;
 import com.neusoft.response.RegRespObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,8 @@ public class ApiController {
     CommentMapper commentMapper;
     @Autowired
     UserCommentAgreeMapper userCommentAgreeMapper;
+    @Autowired
+    UserMapper userMapper;
     @RequestMapping("jie-set")
     public void jieSet(Integer id, Integer rank, String field, HttpServletResponse response) throws IOException {
         Topic topic = topicMapper.selectByPrimaryKey(id);
@@ -70,6 +73,9 @@ public class ApiController {
         topic.setIsEnd(1);
         topicMapper.updateByPrimaryKeySelective(topic);
 
+        User user = userMapper.selectByPrimaryKey(comment.getUserId());
+        user.setKissNum(user.getKissNum() + topic.getKissNum());
+        userMapper.updateByPrimaryKeySelective(user);
         response.getWriter().println(JSON.toJSONString(regRespObj));
     }
 

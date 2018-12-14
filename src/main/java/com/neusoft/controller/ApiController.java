@@ -13,13 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Administrator on 2018/12/13.
@@ -66,6 +71,36 @@ public class ApiController {
         topicMapper.updateByPrimaryKeySelective(topic);
 
         response.getWriter().println(JSON.toJSONString(regRespObj));
+    }
+
+    @RequestMapping("upload")
+    @ResponseBody
+    public RegRespObj upload(@RequestParam MultipartFile file, HttpServletRequest request) throws IOException {
+        RegRespObj regRespObj = new RegRespObj();
+        if(file.getSize()>0){
+            String realPath = request.getServletContext().getRealPath("/res/uploadImgs");
+            File file1 = new File(realPath);
+            if(!file1.exists()){
+                file1.mkdirs();
+            }
+            UUID uuid = UUID.randomUUID();
+            File file2 = new File(realPath+File.separator+uuid+file.getOriginalFilename());
+            file.transferTo(file2);
+
+            HttpSession session = request.getSession();
+            User userinfo = (User)session.getAttribute("userinfo");
+            userinfo.setPicPath(uuid+file.getOriginalFilename());
+            session.setAttribute("userinfo",userinfo);
+
+
+            regRespObj.setUrl(request.getServletContext().getContextPath()+"/res/uploadImgs/"+uuid+file.getOriginalFilename());
+            regRespObj.setStatus(0);
+        }
+        else
+        {
+            regRespObj.setStatus(1);
+        }
+        return regRespObj;
     }
 
     @RequestMapping("jieda-zan")

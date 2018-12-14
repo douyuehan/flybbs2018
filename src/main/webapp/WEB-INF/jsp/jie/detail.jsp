@@ -22,7 +22,6 @@
 <body>
 
 <%@include file="../common/header.jsp"%>
-
 <%@include file="../common/column.jsp"%>
 
 <div class="layui-container">

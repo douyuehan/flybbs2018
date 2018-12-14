@@ -19,6 +19,11 @@
     delete from tab_user_comment_agree
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByUserIDAndCommentID" parameterType="map" >
+    delete from tab_user_comment_agree
+    where userid = #{userid} and commentid = #{commentid}
+  </delete>
+
   <insert id="insert" parameterType="com.neusoft.domain.UserCommentAgree" >
     insert into tab_user_comment_agree (id, userid, commentid
       )

@@ -2,6 +2,8 @@ package com.neusoft.mapper;
 
 import com.neusoft.domain.UserCommentAgree;
 
+import java.util.Map;
+
 public interface UserCommentAgreeMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface UserCommentAgreeMapper {
     int updateByPrimaryKeySelective(UserCommentAgree record);
 
     int updateByPrimaryKey(UserCommentAgree record);
+
+    int deleteByUserIDAndCommentID(Map<String,Object> params);
 }

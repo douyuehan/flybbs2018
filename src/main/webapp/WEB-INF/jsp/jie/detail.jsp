@@ -61,8 +61,16 @@
                     <!-- <span class="layui-badge">审核中</span> -->
                     <span class="layui-badge layui-bg-green fly-detail-column">${topic.name}</span>
 
-                    <span class="layui-badge" style="background-color: #999;">未结</span>
-                    <!-- <span class="layui-badge" style="background-color: #5FB878;">已结</span> -->
+                    <c:choose>
+                        <c:when test="${topic.is_end == 0}">
+                            <span class="layui-badge" style="background-color: #999;">未结</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="layui-badge" style="background-color: #5FB878;">已结</span>
+                        </c:otherwise>
+                    </c:choose>
+
+
                     <c:if test="${topic.is_top == 1}">
                         <span class="layui-badge layui-bg-black">置顶</span>
                     </c:if>
@@ -144,12 +152,21 @@
                 <ul class="jieda" id="jieda">
 
                     <c:forEach items="${comments}" var="comment">
-                        <li data-id="111" class="jieda-daan">
+                        <li data-id="${comment.id}" class="jieda-daan">
                             <a name="item-1111111111"></a>
                             <div class="detail-about detail-about-reply">
                                 <a class="fly-avatar" href="#">
-                                    <img src="${pageContext.request.contextPath}/res/uploadImgs/${comment.pic_path}" alt="${comment.nickname}">
+
+                                    <c:choose>
+                                        <c:when test="${comment.pic_path != ''}">
+                                            <img src="${pageContext.request.contextPath}/res/uploadImgs/${comment.pic_path}" alt="${comment.nickname}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+                                        </c:otherwise>
+                                    </c:choose>
                                 </a>
+
                                 <div class="fly-detail-user">
                                     <a href="#" class="fly-link">
                                         <cite>${comment.nickname}</cite>
@@ -172,13 +189,15 @@
                                     <span>${comment.comment_time}</span>
                                 </div>
 
-                                <i class="iconfont icon-caina" title="最佳答案"></i>
+                                <c:if test="${comment.is_choose == 1}">
+                                    <i class="iconfont icon-caina" title="最佳答案"></i>
+                                </c:if>
                             </div>
                             <div class="detail-body jieda-body photos">
                                     ${comment.comment_content}
                             </div>
                             <div class="jieda-reply">
-              <span class="jieda-zan zanok" type="zan">
+              <span class="jieda-zan" type="zan">
                 <i class="iconfont icon-zan"></i>
                 <em>${comment.like_num}</em>
               </span>
@@ -187,9 +206,11 @@
                 回复
               </span>
                                 <div class="jieda-admin">
-                                    <span type="edit">编辑</span>
-                                    <span type="del">删除</span>
-                                    <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                                    <%--<span type="edit">编辑</span>--%>
+                                    <%--<span type="del">删除</span>--%>
+                                    <c:if test="${topic.is_end == 0 and userinfo.id == topic.userid and topic.userid != comment.userid}">
+                                        <span class="jieda-accept" type="accept">采纳</span>
+                                    </c:if>
                                 </div>
                             </div>
                         </li>

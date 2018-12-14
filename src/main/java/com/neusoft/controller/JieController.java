@@ -54,12 +54,20 @@ public class JieController {
         return modelAndView;
     }
 
-    @RequestMapping("add")
-    public ModelAndView add()
+    @RequestMapping("add/{tid}")
+    public ModelAndView add(@PathVariable Integer tid)
     {
+
         List<TopicCategory> topicCategoryList = topicCategoryMapper.getAllCategories();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("categories",topicCategoryList);
+        modelAndView.addObject("tid",tid);
+        if(tid > 0)
+        {
+            Topic topic = topicMapper.selectByPrimaryKey(tid);
+            modelAndView.addObject("topic",topic);
+        }
+
         modelAndView.setViewName("jie/add");
         return modelAndView;
     }
@@ -112,29 +120,40 @@ public class JieController {
     @RequestMapping("doadd")
     public void doadd(Topic topic, HttpServletResponse response, HttpServletRequest request) throws IOException {
         RegRespObj regRespObj = new RegRespObj();
-
-
         HttpSession httpSession = request.getSession();
         User user = (User)httpSession.getAttribute("userinfo");
         topic.setUserid(user.getId());
-        topic.setCreateTime(new Date());
 
-
-        if(topic.getKissNum() > user.getKissNum())
+        if(topic.getId() == 0)//新增
         {
-            regRespObj.setStatus(1);
-            regRespObj.setMsg("飞吻不够");
+            topic.setCreateTime(new Date());
+
+            if(topic.getKissNum() > user.getKissNum())
+            {
+                regRespObj.setStatus(1);
+                regRespObj.setMsg("飞吻不够");
+            }
+            else
+            {
+                int result = topicMapper.insertSelective(topic);
+                user.setKissNum(user.getKissNum() - topic.getKissNum());
+                userMapper.updateByPrimaryKeySelective(user);
+                if(result > 0)
+                {
+                    regRespObj.setStatus(0);
+                    regRespObj.setAction(request.getServletContext().getContextPath() + "/");
+
+                }
+            }
         }
         else
         {
-            int result = topicMapper.insertSelective(topic);
-            user.setKissNum(user.getKissNum() - topic.getKissNum());
-            userMapper.updateByPrimaryKeySelective(user);
+            int result = topicMapper.updateByPrimaryKeySelective(topic);
+
             if(result > 0)
             {
                 regRespObj.setStatus(0);
                 regRespObj.setAction(request.getServletContext().getContextPath() + "/");
-
             }
         }
 

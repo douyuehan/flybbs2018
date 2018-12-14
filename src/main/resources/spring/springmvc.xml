@@ -37,7 +37,7 @@
 
             <!-- /**表示所有url包括子url路径 -->
 
-            <mvc:mapping path="/jie/add"/>
+            <mvc:mapping path="/jie/add/**"/>
 
             <bean class="com.neusoft.interceptor.LoginInterceptor"></bean>
 

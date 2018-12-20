@@ -1,14 +1,8 @@
 package com.neusoft.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.neusoft.domain.Comment;
-import com.neusoft.domain.Topic;
-import com.neusoft.domain.TopicCategory;
-import com.neusoft.domain.User;
-import com.neusoft.mapper.CommentMapper;
-import com.neusoft.mapper.TopicCategoryMapper;
-import com.neusoft.mapper.TopicMapper;
-import com.neusoft.mapper.UserMapper;
+import com.neusoft.domain.*;
+import com.neusoft.mapper.*;
 import com.neusoft.response.RegRespObj;
 import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Administrator on 2018/12/10.
@@ -35,14 +28,14 @@ public class JieController {
 
     @Autowired
     TopicCategoryMapper topicCategoryMapper;
-
     @Autowired
     TopicMapper topicMapper;
-
     @Autowired
     CommentMapper commentMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    UserMessageMapper userMessageMapper;
 
     @RequestMapping("index/{cid}/{typeid}")
     public ModelAndView index(@PathVariable Integer cid,@PathVariable Integer typeid)
@@ -167,6 +160,7 @@ public class JieController {
         User user = (User)httpSession.getAttribute("userinfo");
         if(user != null)
         {
+            //插入评论
             comment.setCommentContent(content);
             comment.setUserId(user.getId());
             comment.setCommentTime(new Date());
@@ -179,6 +173,42 @@ public class JieController {
             int comment_num = topic.getCommentNum();
             topic.setCommentNum(comment_num + 1);
             topicMapper.updateByPrimaryKeySelective(topic);
+
+            //在消息表中添加一条消息
+            if(topic.getUserid() != user.getId())
+            {
+                UserMessage userMessage = new UserMessage();
+                userMessage.setCreateTime(new Date());
+                userMessage.setTopicId(comment.getTopicId());
+                userMessage.setMsgType(1);
+                userMessage.setTriggerMsgUserId(user.getId());
+                userMessage.setRecvMsgUserId(topic.getUserid());
+                userMessageMapper.insertSelective(userMessage);
+            }
+
+
+            Pattern pattern = Pattern.compile("@(.*?)\\s");
+            Matcher matcher = pattern.matcher(comment.getCommentContent());
+            Set<String> stringSet = new HashSet<>();
+            while (matcher.find()) {
+                String nickname = matcher.group(1);
+                stringSet.add(nickname);
+            }
+            for(String username : stringSet)
+            {
+                User user1 = userMapper.selectByNickname(username);
+                if(user1 != null)
+                {
+                    UserMessage userMessage = new UserMessage();
+                    userMessage.setCreateTime(new Date());
+                    userMessage.setTopicId(comment.getTopicId());
+                    userMessage.setMsgType(1);
+                    userMessage.setTriggerMsgUserId(user.getId());
+                    userMessage.setRecvMsgUserId(user1.getId());
+                    userMessageMapper.insertSelective(userMessage);
+                }
+            }
+
         }
         else
         {

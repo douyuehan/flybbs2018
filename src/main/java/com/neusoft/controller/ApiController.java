@@ -1,14 +1,8 @@
 package com.neusoft.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.neusoft.domain.Comment;
-import com.neusoft.domain.Topic;
-import com.neusoft.domain.User;
-import com.neusoft.domain.UserCommentAgree;
-import com.neusoft.mapper.CommentMapper;
-import com.neusoft.mapper.TopicMapper;
-import com.neusoft.mapper.UserCommentAgreeMapper;
-import com.neusoft.mapper.UserMapper;
+import com.neusoft.domain.*;
+import com.neusoft.mapper.*;
 import com.neusoft.response.RegRespObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,6 +36,8 @@ public class ApiController {
     UserCommentAgreeMapper userCommentAgreeMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    UserMessageMapper userMessageMapper;
     @RequestMapping("jie-set")
     public void jieSet(Integer id, Integer rank, String field, HttpServletResponse response) throws IOException {
         Topic topic = topicMapper.selectByPrimaryKey(id);
@@ -60,7 +57,7 @@ public class ApiController {
     }
 
     @RequestMapping("jieda-accept")
-    public void jiedaAccept(Integer id, HttpServletResponse response) throws IOException {
+    public void jiedaAccept(Integer id, HttpServletResponse response,HttpSession httpSession) throws IOException {
         RegRespObj regRespObj = new RegRespObj();
         regRespObj.setStatus(0);
 
@@ -72,6 +69,18 @@ public class ApiController {
         Topic topic = topicMapper.selectByPrimaryKey(comment.getTopicId());
         topic.setIsEnd(1);
         topicMapper.updateByPrimaryKeySelective(topic);
+
+        //记录消息
+        //在消息表中添加一条消息
+        User userLogin = (User)httpSession.getAttribute("userinfo");
+        UserMessage userMessage = new UserMessage();
+        userMessage.setCreateTime(new Date());
+        userMessage.setTopicId(comment.getTopicId());
+        userMessage.setMsgType(2);
+        userMessage.setTriggerMsgUserId(userLogin.getId());
+        userMessage.setRecvMsgUserId(comment.getUserId());
+        userMessageMapper.insertSelective(userMessage);
+
 
         User user = userMapper.selectByPrimaryKey(comment.getUserId());
         user.setKissNum(user.getKissNum() + topic.getKissNum());

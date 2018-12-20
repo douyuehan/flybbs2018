@@ -120,8 +120,8 @@ DROP TABLE IF EXISTS `tab_user_message`;
 CREATE TABLE `tab_user_message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL DEFAULT '0',
-  `topic_id` int(11) NOT NULL DEFAULT '0',
-  `content` varchar(100) NOT NULL DEFAULT '',
+  `object_id` int(11) NOT NULL DEFAULT '0',
+  `msg_type` int(11) NOT NULL DEFAULT '0',
   `create_time` datetime NOT NULL DEFAULT '0000-01-01 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

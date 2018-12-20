@@ -336,7 +336,8 @@
 
          $('.detail-body').each(function(){
          var othis = $(this), html = othis.html();
-         othis.html(fly.content(html));
+         var content = fly.content(html);
+         othis.html(content);
          });
 
     });

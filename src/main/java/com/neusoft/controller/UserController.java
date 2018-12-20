@@ -1,25 +1,24 @@
 package com.neusoft.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.Topic;
+import com.neusoft.domain.UserMessage;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
+import com.neusoft.mapper.UserMessageMapper;
 import com.neusoft.util.MD5Utils;
 import com.neusoft.domain.User;
 import com.neusoft.mapper.UserMapper;
 import com.neusoft.response.RegRespObj;
 import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +43,9 @@ public class UserController {
     @Autowired
     CommentMapper commentMapper;
 
+    @Autowired
+    UserMessageMapper userMessageMapper;
+
     @RequestMapping("reg")
     public String reg()
     {
@@ -64,6 +66,17 @@ public class UserController {
             user.setPasswd(pwd);
             int i = userMapper.insertSelective(user);
             if(i>0){
+                User userReg = userMapper.selectByNickname(user.getNickname());
+                //插入一条系统欢迎消息
+                UserMessage userMessage = new UserMessage();
+                userMessage.setCreateTime(new Date());
+                userMessage.setTopicId(-1);
+                userMessage.setMsgType(0);
+                userMessage.setTriggerMsgUserId(0);
+                userMessage.setRecvMsgUserId(userReg.getId());
+                userMessageMapper.insertSelective(userMessage);
+
+
                 regRespObj.setStatus(0);
                 System.out.println(request.getServletContext().getContextPath());
                 regRespObj.setAction(request.getServletContext().getContextPath() + "/");
@@ -105,6 +118,28 @@ public class UserController {
         return "user/login";
     }
 
+    @RequestMapping("index")
+    public String index()
+    {
+        return "user/index";
+    }
+    @RequestMapping("message")
+    public ModelAndView message(HttpSession httpSession)
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        User userLogin = (User)httpSession.getAttribute("userinfo");
+        List<Map<String,Object>> mapList = userMessageMapper.getMessagesByUserID(userLogin.getId());
+        for(Map<String,Object> map : mapList)
+        {
+            Date date = (Date)map.get("create_time");
+            String strDate = StringDate.getStringDate(date);
+            map.put("create_time",strDate);
+        }
+
+        modelAndView.addObject("messages",mapList);
+        modelAndView.setViewName("user/message");
+        return modelAndView;
+    }
     @RequestMapping("jumphome/{username}")
     public ModelAndView jumphome(@PathVariable String username)
     {
@@ -175,11 +210,23 @@ public class UserController {
         return regRespObj;
     }
 
-    @RequestMapping("set")
+    @RequestMapping(value = "set",method = {RequestMethod.GET})
     public String userSetting()
     {
+        System.out.println("userSetting");
         return "user/set";
     }
+    @RequestMapping(value = "set",method = {RequestMethod.POST})
+    public void userUpdateSetting(User user,HttpServletResponse response,HttpSession httpSession) throws IOException {
+        User userLogin = (User)httpSession.getAttribute("userinfo");
+        user.setId(userLogin.getId());
+        userMapper.updateByPrimaryKeySelective(user);
+        RegRespObj regRespObj = new RegRespObj();
+        regRespObj.setStatus(0);
+
+        response.getWriter().println(JSON.toJSONString(regRespObj));
+    }
+
     @RequestMapping("upload")
     @ResponseBody
     public RegRespObj upload(@RequestParam  MultipartFile file,HttpServletRequest request) throws IOException {

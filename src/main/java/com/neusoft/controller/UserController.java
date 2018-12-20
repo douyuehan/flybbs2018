@@ -1,10 +1,15 @@
 package com.neusoft.controller;
 
+import com.neusoft.domain.Topic;
+import com.neusoft.mapper.CommentMapper;
+import com.neusoft.mapper.TopicMapper;
 import com.neusoft.util.MD5Utils;
 import com.neusoft.domain.User;
 import com.neusoft.mapper.UserMapper;
 import com.neusoft.response.RegRespObj;
+import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,11 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -29,6 +37,12 @@ public class UserController {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    TopicMapper topicMapper;
+
+    @Autowired
+    CommentMapper commentMapper;
 
     @RequestMapping("reg")
     public String reg()
@@ -94,10 +108,8 @@ public class UserController {
     @RequestMapping("jumphome/{username}")
     public ModelAndView jumphome(@PathVariable String username)
     {
-        ModelAndView modelAndView = new ModelAndView();
         User user = userMapper.selectByNickname(username);
-        modelAndView.addObject("user",user);
-        modelAndView.setViewName("user/home");
+        ModelAndView modelAndView = home(user.getId());
         return modelAndView;
     }
     @RequestMapping("home/{uid}")
@@ -105,6 +117,24 @@ public class UserController {
     {
         ModelAndView modelAndView = new ModelAndView();
         User user = userMapper.selectByPrimaryKey(uid);
+        List<Topic> topicList = topicMapper.getTopicsByUserID(uid);
+
+        for(Topic topic : topicList)
+        {
+            Date date = topic.getCreateTime();
+            String strDate = StringDate.getStringDate(date);
+            topic.setCreateTimeStr(strDate);
+        }
+
+        List<Map<String,Object>> mapList = commentMapper.getCommentsByUserID(uid);
+        for(Map<String,Object> map : mapList)
+        {
+            Date date = (Date)map.get("comment_time");
+            String strDate = StringDate.getStringDate(date);
+            map.put("comment_time",strDate);
+        }
+        modelAndView.addObject("comments",mapList);
+        modelAndView.addObject("topics",topicList);
         modelAndView.addObject("user",user);
         modelAndView.setViewName("user/home");
         return modelAndView;

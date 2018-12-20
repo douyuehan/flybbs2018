@@ -216,7 +216,7 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <input type="hidden" name="topicIdtopicId" value="${topic.topic_id}">
+                            <input type="hidden" name="topicId" value="${topic.topic_id}">
                             <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
                         </div>
                     </form>

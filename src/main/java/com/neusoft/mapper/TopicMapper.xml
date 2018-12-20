@@ -270,4 +270,10 @@ limit #{pageStart},#{pageSize}
     join tab_topic_category on tab_topic.topic_category_id = tab_topic_category.id
     where tab_topic.is_top = 1
   </select>
+
+  <select id="getTopicsByUserID" parameterType="int" resultMap="BaseResultMap">
+    select * from tab_topic where tab_topic.userid = #{value} order by create_time desc LIMIT 0, 15
+  </select>
+
+
 </mapper>

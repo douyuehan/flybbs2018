@@ -19,8 +19,6 @@
     <context:property-placeholder location="classpath:db.properties" />
 
     <!-- 配置数据源 ，dbcp -->
-
-
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <!-- 基本属性 url、user、password -->
         <property name="url" value="${jdbc.url}" />

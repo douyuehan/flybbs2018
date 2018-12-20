@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,45 +59,23 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md6 fly-home-jie">
             <div class="fly-panel">
-                <h3 class="fly-panel-title">贤心 最近的提问</h3>
+                <h3 class="fly-panel-title">${user.nickname} 最近的提问</h3>
                 <ul class="jie-row">
-                    <li>
-                        <span class="fly-jing">精</span>
-                        <a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>
-                        <i>刚刚</i>
-                        <em class="layui-hide-xs">1136阅/27答</em>
-                    </li>
-                    <li>
-                        <a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>
-                        <i>1天前</i>
-                        <em class="layui-hide-xs">1136阅/27答</em>
-                    </li>
-                    <li>
-                        <a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>
-                        <i>2017-10-30</i>
-                        <em class="layui-hide-xs">1136阅/27答</em>
-                    </li>
-                    <li>
-                        <a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>
-                        <i>1天前</i>
-                        <em class="layui-hide-xs">1136阅/27答</em>
-                    </li>
-                    <li>
-                        <a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>
-                        <i>1天前</i>
-                        <em class="layui-hide-xs">1136阅/27答</em>
-                    </li>
-                    <li>
-                        <a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>
-                        <i>1天前</i>
-                        <em class="layui-hide-xs">1136阅/27答</em>
-                    </li>
-                    <li>
-                        <a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>
-                        <i>1天前</i>
-                        <em class="layui-hide-xs">1136阅/27答</em>
-                    </li>
-                    <!-- <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有发表任何求解</i></div> -->
+                    <c:forEach items="${topics}" var="topic">
+                        <li>
+                            <c:if test="${topic.isGood != 0}">
+                                <span class="fly-jing">精</span>
+                            </c:if>
+
+                            <a href="${pageContext.request.contextPath}/jie/detail/${topic.id}" class="jie-title"> ${topic.title}</a>
+                            <i>${topic.createTimeStr}</i>
+                            <em class="layui-hide-xs">${topic.viewTimes}阅/${topic.commentNum}答</em>
+                        </li>
+                    </c:forEach>
+
+                    <c:if test="${empty topics}">
+                        <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有发表任何求解</i></div>
+                    </c:if>
                 </ul>
             </div>
         </div>
@@ -106,30 +84,22 @@
             <div class="fly-panel">
                 <h3 class="fly-panel-title">贤心 最近的回答</h3>
                 <ul class="home-jieda">
-                    <li>
-                        <p>
-                            <span>1分钟前</span>
-                            在<a href="" target="_blank">tips能同时渲染多个吗?</a>中回答：
-                        </p>
-                        <div class="home-dacontent">
-                            尝试给layer.photos加上这个属性试试：
-                            <pre>
-full: true
-</pre>
-                            文档没有提及
-                        </div>
-                    </li>
-                    <li>
-                        <p>
-                            <span>5分钟前</span>
-                            在<a href="" target="_blank">在Fly社区用的是什么系统啊?</a>中回答：
-                        </p>
-                        <div class="home-dacontent">
-                            Fly社区采用的是NodeJS。分享出来的只是前端模版
-                        </div>
-                    </li>
+                    <c:forEach items="${comments}" var="comment">
+                        <li>
+                            <p>
+                                <span>${comment.comment_time}</span>
+                                在<a href="${pageContext.request.contextPath}/jie/detail/${comment.id}" target="_blank">${comment.title}</a>中回答：
+                            </p>
+                            <div class="home-dacontent">
+                                    ${comment.comment_content}
+                            </div>
+                        </li>
+                    </c:forEach>
 
-                    <!-- <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有回答任何问题</span></div> -->
+                    <c:if test="${empty comments}">
+                        <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有回答任何问题</span></div>
+                    </c:if>
+
                 </ul>
             </div>
         </div>
@@ -160,7 +130,15 @@ full: true
         ,base: '${pageContext.request.contextPath}/res/mods/'
     }).extend({
         fly: 'index'
-    }).use('fly');
+    }).use('fly',function () {
+        var $ = layui.$
+            ,fly = layui.fly;
+        $('.home-dacontent').each(function(){
+            var othis = $(this);
+            var html = othis.html();
+            othis.html(fly.content(html));
+        });
+    });
 </script>
 
 </body>

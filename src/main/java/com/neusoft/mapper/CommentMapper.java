@@ -20,5 +20,5 @@ public interface CommentMapper {
 
     List<Map<String,Object>> getCommentsByTopicID(Map<String,Object> params);
 
-
+    List<Map<String,Object>> getCommentsByUserID(int userid);
 }

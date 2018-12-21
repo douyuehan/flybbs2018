@@ -13,6 +13,8 @@ public class UserMessage {
 
     private Integer msgType;
 
+    private Integer isRead;
+
     private Date createTime;
 
     public Integer getId() {
@@ -53,6 +55,14 @@ public class UserMessage {
 
     public void setMsgType(Integer msgType) {
         this.msgType = msgType;
+    }
+
+    public Integer getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Integer isRead) {
+        this.isRead = isRead;
     }
 
     public Date getCreateTime() {

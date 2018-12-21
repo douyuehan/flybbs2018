@@ -363,13 +363,8 @@
 <script src="${pageContext.request.contextPath}/res/layui/layui.js"></script>
 <script>
     layui.cache.page = '';
-    layui.cache.user = {
-        username: '游客'
-        ,uid: -1
-        ,avatar: '${pageContext.request.contextPath}/res/images/avatar/00.jpg'
-        ,experience: 83
-        ,sex: '男'
-    };
+
+    <%@include file="common/cache_user.jsp"%>
 
     function fillTopicList(jsonData) {
         //模板替换--把jsonData绑定到topic_list模板上

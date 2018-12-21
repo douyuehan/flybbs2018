@@ -17,6 +17,8 @@ public interface UserMessageMapper {
     int updateByPrimaryKeySelective(UserMessage record);
 
     int updateByPrimaryKey(UserMessage record);
-
     List<Map<String,Object>> getMessagesByUserID(int userid);
+    int getUnreadMsgCountByUserID(int userid);
+
+    int updateUserMsgReadState(int userid);
 }

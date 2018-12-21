@@ -52,9 +52,8 @@
                         <span class="layui-badge layui-bg-red">精帖</span>
                     </c:if>
 
-
-                    <c:if test="${userinfo.isadmin == 1}">
-                        <div class="fly-admin-box" data-id="${topic.topic_id}">
+                    <div class="fly-admin-box" data-id="${topic.topic_id}">
+                        <c:if test="${userinfo.isadmin == 1}">
                             <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
 
                             <c:choose>
@@ -74,9 +73,8 @@
                                     <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span>
                                 </c:otherwise>
                             </c:choose>
-                        </div>
-                    </c:if>
-
+                        </c:if>
+                    </div>
 
 
                     <span class="fly-list-nums">
@@ -103,14 +101,23 @@
                         </a>
                         <span>${topic.create_time}</span>
                     </div>
-                    <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
+                    <div class="detail-hits" id="LAY_jieAdmin" data-id="${topic.topic_id}">
                         <span style="padding-right: 10px; color: #FF7200">悬赏：${topic.kiss_num}飞吻</span>
                         <c:if test="${!empty userinfo}">
                             <c:if test="${userinfo.id == topic.userid and topic.is_end == 0}">
                                 <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="${pageContext.request.contextPath}/jie/add/${topic.topic_id}">编辑此贴</a></span>
                             </c:if>
                         </c:if>
-
+                        <%--<c:if test="${!empty userinfo and userinfo.id != topic.userid}">--%>
+                            <%--<c:choose>--%>
+                                <%--<c:when test="${is_collect == 1}">--%>
+                                    <%--<span class="layui-btn layui-btn-xs jie-admin layui-btn-danger" type="collect" data-type="remove">取消收藏</span>--%>
+                                <%--</c:when>--%>
+                                <%--<c:otherwise>--%>
+                                    <%--<span class="layui-btn layui-btn-xs jie-admin" type="collect" data-type="add">收藏</span>--%>
+                                <%--</c:otherwise>--%>
+                            <%--</c:choose>--%>
+                        <%--</c:if>--%>
                     </div>
                 </div>
                 <div class="detail-body photos">

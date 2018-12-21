@@ -105,9 +105,13 @@ public class JieController {
             map2.put("comment_time",strDate2);
         }
 
+
+
+
         modelAndView.setViewName("jie/detail");
         modelAndView.addObject("topic",map);
         modelAndView.addObject("comments",mapList);
+
         return modelAndView;
     }
     @RequestMapping("doadd")

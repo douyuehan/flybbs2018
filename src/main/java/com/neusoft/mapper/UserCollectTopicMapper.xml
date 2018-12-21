@@ -68,4 +68,12 @@
       topic_id = #{topicId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <delete id="delCollectInfo" parameterType="map">
+      delete from tab_user_collect_topic where topic_id = #{topicid} and user_id = #{userid}
+  </delete>
+
+  <select id="getIsCollectInfo" parameterType="map" resultType="int">
+      select count(*) from tab_user_collect_topic where topic_id = #{topicid} and user_id = #{userid}
+  </select>
 </mapper>

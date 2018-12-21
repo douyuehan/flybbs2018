@@ -275,5 +275,12 @@ limit #{pageStart},#{pageSize}
     select * from tab_topic where tab_topic.userid = #{value} order by create_time desc LIMIT 0, 15
   </select>
 
+  <select id="getTopicNumByUserID" parameterType="int" resultType="int">
+select count(*) from tab_topic
+where tab_topic.userid = #{value}
+  </select>
+  <select id="getTop10Topics" resultMap="BaseResultMap">
+      select * from tab_topic order by comment_num desc limit 0,10
+  </select>
 
 </mapper>

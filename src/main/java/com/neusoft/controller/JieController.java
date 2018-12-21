@@ -40,10 +40,12 @@ public class JieController {
     @RequestMapping("index/{cid}/{typeid}")
     public ModelAndView index(@PathVariable Integer cid,@PathVariable Integer typeid)
     {
+        List<Topic> topics = topicMapper.getTop10Topics();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jie/index");
         modelAndView.addObject("cid",cid);
         modelAndView.addObject("typeid",typeid);
+        modelAndView.addObject("topics",topics);
         return modelAndView;
     }
 
@@ -105,11 +107,12 @@ public class JieController {
             map2.put("comment_time",strDate2);
         }
 
-
+        List<Topic> topics = topicMapper.getTop10Topics();
 
 
         modelAndView.setViewName("jie/detail");
         modelAndView.addObject("topic",map);
+        modelAndView.addObject("topics",topics);
         modelAndView.addObject("comments",mapList);
 
         return modelAndView;

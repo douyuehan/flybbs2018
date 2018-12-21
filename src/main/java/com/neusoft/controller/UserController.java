@@ -3,12 +3,9 @@ package com.neusoft.controller;
 import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.Topic;
 import com.neusoft.domain.UserMessage;
-import com.neusoft.mapper.CommentMapper;
-import com.neusoft.mapper.TopicMapper;
-import com.neusoft.mapper.UserMessageMapper;
+import com.neusoft.mapper.*;
 import com.neusoft.util.MD5Utils;
 import com.neusoft.domain.User;
-import com.neusoft.mapper.UserMapper;
 import com.neusoft.response.RegRespObj;
 import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,9 @@ public class UserController {
 
     @Autowired
     UserMessageMapper userMessageMapper;
+
+    @Autowired
+    UserCollectTopicMapper userCollectTopicMapper;
 
     @RequestMapping("reg")
     public String reg()
@@ -119,9 +119,31 @@ public class UserController {
     }
 
     @RequestMapping("index")
-    public String index()
+    public ModelAndView index(HttpSession httpSession)
     {
-        return "user/index";
+        User userLogin = (User)httpSession.getAttribute("userinfo");
+        List<Map<String,Object>> mapList = userCollectTopicMapper.getCollectionsByUserID(userLogin.getId());
+
+
+        List<Topic> topicList = topicMapper.getTopicsByUserID(userLogin.getId());
+
+        for(Topic topic : topicList)
+        {
+            Date date = topic.getCreateTime();
+            String strDate = StringDate.getStringDate(date);
+            topic.setCreateTimeStr(strDate);
+        }
+
+        int topic_num = topicMapper.getTopicNumByUserID(userLogin.getId());
+        int collect_num = userCollectTopicMapper.getCollectNumByUserID(userLogin.getId());
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user/index");
+        modelAndView.addObject("collections",mapList);
+        modelAndView.addObject("topics",topicList);
+        modelAndView.addObject("topic_num",topic_num);
+        modelAndView.addObject("collect_num",collect_num);
+        return modelAndView;
     }
     @RequestMapping("message")
     public ModelAndView message(HttpSession httpSession)

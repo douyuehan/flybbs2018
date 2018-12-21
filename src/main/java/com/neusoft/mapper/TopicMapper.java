@@ -34,4 +34,6 @@ public interface TopicMapper {
     List<Map<String,Object>> getTopTopics();
 
     List<Topic> getTopicsByUserID(int userid);
+    int getTopicNumByUserID(int userid);
+    List<Topic> getTop10Topics();
 }

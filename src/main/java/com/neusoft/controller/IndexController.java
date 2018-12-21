@@ -1,6 +1,8 @@
 package com.neusoft.controller;
 
+import com.neusoft.domain.Topic;
 import com.neusoft.mapper.TopicMapper;
+import com.neusoft.mapper.UserMapper;
 import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ public class IndexController {
 
     @Autowired
     TopicMapper topicMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @RequestMapping("/")
     public ModelAndView index()
@@ -27,7 +31,9 @@ public class IndexController {
 //        modelAndView.setViewName("page");
 //        return modelAndView;
 
+        List<Map<String,Object>> userList = userMapper.getTopUsers();
 
+        List<Topic> topics = topicMapper.getTop10Topics();
         //置顶帖子
         List<Map<String,Object>> mapList = topicMapper.getTopTopics();
         for(Map<String,Object> map : mapList)
@@ -42,6 +48,10 @@ public class IndexController {
         modelAndView.setViewName("index");
         modelAndView.addObject("top_topics",mapList);
         modelAndView.addObject("typeid",0);
+        modelAndView.addObject("topics",topics);
+        modelAndView.addObject("top_users",userList);
+
+
         return modelAndView;
     }
 }

@@ -4,6 +4,7 @@ import com.neusoft.domain.PageInfo;
 import com.neusoft.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
@@ -22,4 +23,6 @@ public interface UserMapper {
     User selectByNickname(String nickname);
     int getTotalCounts();
     List<User> getPagedUser(PageInfo pageInfo);
+
+    List<Map<String,Object>> getTopUsers();
 }

@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,38 +33,34 @@
         -->
         <div class="layui-tab layui-tab-brief" lay-filter="user">
             <ul class="layui-tab-title" id="LAY_mine">
-                <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>89</span>）</li>
-                <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span>16</span>）</li>
+                <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>${topic_num}</span>）</li>
+                <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span>${collect_num}</span>）</li>
             </ul>
             <div class="layui-tab-content" style="padding: 20px 0;">
                 <div class="layui-tab-item layui-show">
                     <ul class="mine-view jie-row">
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>2017/3/14 上午8:30:00</i>
-                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                            <em>661阅/10答</em>
-                        </li>
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>2017/3/14 上午8:30:00</i>
-                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                            <em>661阅/10答</em>
-                        </li>
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>2017/3/14 上午8:30:00</i>
-                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                            <em>661阅/10答</em>
-                        </li>
+                        <c:forEach items="${topics}" var="topic">
+                            <li>
+                                <a class="jie-title" href="${pageContext.request.contextPath}/jie/detail/${topic.id}" target="_blank">${topic.title}</a>
+                                <i>${topic.createTimeStr}</i>
+                                <a class="mine-edit" href="${pageContext.request.contextPath}/jie/add/${topic.id}">编辑</a>
+                                <em>${topic.viewTimes}阅/${topic.commentNum}答</em>
+                            </li>
+                        </c:forEach>
+
+
                     </ul>
                     <div id="LAY_page"></div>
                 </div>
                 <div class="layui-tab-item">
                     <ul class="mine-view jie-row">
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>收藏于23小时前</i>  </li>
+                        <c:forEach items="${collections}" var="collect">
+                            <li>
+                                <a class="jie-title" href="${pageContext.request.contextPath}/jie/detail/${collect.id}" target="_blank">${collect.title}</a>
+
+                            </li>
+                        </c:forEach>
+
                     </ul>
                     <div id="LAY_page1"></div>
                 </div>

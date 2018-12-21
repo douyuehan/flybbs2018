@@ -222,6 +222,7 @@
         getPagedTopic(null,jq);
 
         $('#topic-type').find('a').eq(${typeid}).addClass('layui-this').siblings().removeClass('layui-this');
+        $('.neu-category').find('li').eq(${cid}).addClass('layui-this').siblings().removeClass('layui-this');
     });
 </script>
 

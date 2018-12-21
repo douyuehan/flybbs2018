@@ -157,11 +157,32 @@
                     <a href="javascript:;" class="fly-link" id="LAY_signinHelp">说明</a>
                     <i class="fly-mid"></i>
                     <a href="javascript:;" class="fly-link" id="LAY_signinTop">活跃榜<span class="layui-badge-dot"></span></a>
-                    <span class="fly-signin-days">已连续签到<cite>16</cite>天</span>
+                    <c:if test="${!empty userinfo}">
+                        <span class="fly-signin-days">已连续签到
+                            <cite>
+                                <c:if test="${!empty qiandao}">
+                                    ${qiandao.total}
+                                </c:if>
+                                <c:if test="${empty qiandao}">
+                                    0
+                                </c:if>
+                            </cite>天</span>
+                    </c:if>
+
+
                 </div>
                 <div class="fly-panel-main fly-signin-main">
+                <c:if test="${not is_today_signed}">
                     <button class="layui-btn layui-btn-danger" id="LAY_signin">今日签到</button>
-                    <span>可获得<cite>5</cite>飞吻</span>
+                    <c:if test="${!empty userinfo}">
+                        <span>可获得<cite>${kissnum}</cite>飞吻</span>
+                    </c:if>
+                </c:if>
+
+                    <c:if test="${is_today_signed}">
+                        <button class="layui-btn layui-btn-disabled">今日已签到</button>
+                        <span>获得了<cite>${kissnum}</cite>飞吻</span>
+                    </c:if>
 
                     <!-- 已签到状态 -->
                     <!--
@@ -347,10 +368,12 @@
         fly: 'index'
     }).use(['fly','laypage','laytpl'],function () {
         var jq = layui.jquery;
+        var $ = layui.jquery;
         //请求第一页的数据（每页2条）
         getPagedTopic(null,jq);
 
         $('#topic-type').find('a').eq(${typeid}).addClass('layui-this').siblings().removeClass('layui-this');
+
     });
 </script>
 

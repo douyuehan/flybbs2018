@@ -14,4 +14,6 @@ public interface UserQiandaoMapper {
     int updateByPrimaryKeySelective(UserQiandao record);
 
     int updateByPrimaryKey(UserQiandao record);
+
+    UserQiandao selectByUserID(Integer userid);
 }

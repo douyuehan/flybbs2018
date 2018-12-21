@@ -6,6 +6,7 @@ import com.neusoft.mapper.UserMessageMapper;
 import com.neusoft.response.RegRespObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,25 @@ public class MessageController {
         RegRespObj regRespObj = new RegRespObj();
         regRespObj.setStatus(0);
         regRespObj.setCount(count);
+
+        response.getWriter().println(JSON.toJSONString(regRespObj));
+    }
+
+    @RequestMapping("remove")
+    public void delMsg(Boolean all, Integer id, HttpSession httpSession, HttpServletResponse response) throws IOException {
+        RegRespObj regRespObj = new RegRespObj();
+
+        if(all == null)
+        {
+            userMessageMapper.deleteByPrimaryKey(id);
+            regRespObj.setStatus(0);
+        }
+        else
+        {
+            User user = (User)httpSession.getAttribute("userinfo");
+            userMessageMapper.delAllUserMsg(user.getId());
+            regRespObj.setStatus(0);
+        }
 
         response.getWriter().println(JSON.toJSONString(regRespObj));
     }

@@ -21,4 +21,5 @@ public interface UserMessageMapper {
     int getUnreadMsgCountByUserID(int userid);
 
     int updateUserMsgReadState(int userid);
+    int delAllUserMsg(int userid);
 }

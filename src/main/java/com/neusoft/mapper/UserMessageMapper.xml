@@ -146,4 +146,7 @@
   <update id="updateUserMsgReadState" parameterType="int">
       update tab_user_message set is_read = 1 where tab_user_message.recv_msg_user_id = #{value}
   </update>
+  <delete id="delAllUserMsg" parameterType="int">
+      delete from tab_user_message where tab_user_message.recv_msg_user_id = #{value}
+  </delete>
 </mapper>

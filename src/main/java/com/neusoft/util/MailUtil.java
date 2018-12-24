@@ -105,7 +105,7 @@ public class MailUtil {
         message.setSubject("打折钜惠", "UTF-8");
         String activeUrl="http://localhost:8080/shop/shopqt/user/activemail?mailcode="+mailActiveCode;
         // 5. Content: 邮件正文（可以使用html标签）
-        message.setContent("尊敬的用户，您好！我是符吉清，请点击激活链接完成邮箱激活<a href=\"activeUrl\" target=\"_blank\">"+activeUrl+"</a>", "text/html;charset=UTF-8");
+        message.setContent("尊敬的用户，您好！我是睿道社区站长xxx，请点击激活链接完成邮箱激活<a href=\""+activeUrl+"\" target=\"_blank\">"+activeUrl+"</a>", "text/html;charset=UTF-8");
 
         // 6. 设置发件时间
         message.setSentDate(new Date());

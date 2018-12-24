@@ -72,7 +72,7 @@ public class UserController {
         }
         else
         {
-            return "";
+            return "user/active";
         }
 
     }

@@ -60,18 +60,19 @@ public class UserController {
     }
 
     @RequestMapping("activemail/{code}")
-    public void activemail(@PathVariable String code,HttpServletRequest request,HttpServletResponse response)
+    public String activemail(@PathVariable String code,HttpSession session,HttpServletResponse response)
     {
         User user = userMapper.selectByActiveCode(code);
         if(user != null)
         {
             user.setActiveState(1);
             userMapper.updateByPrimaryKeySelective(user);
-//            response.sendRedirect("");
+            session.setAttribute("userinfo",user);
+            return "user/active_success";
         }
         else
         {
-
+            return "";
         }
 
     }
@@ -88,9 +89,7 @@ public class UserController {
             String passwd = user.getPasswd();
             String pwd = MD5Utils.getPwd(passwd);
             user.setPasswd(pwd);
-            UUID uuid = UUID.randomUUID();
-            String strUuid = uuid.toString().replace("-","");
-            user.setActiveCode(strUuid);
+
             int i = userMapper.insertSelective(user);
             if(i>0){
                 User userReg = userMapper.selectByNickname(user.getNickname());
@@ -102,10 +101,6 @@ public class UserController {
                 userMessage.setTriggerMsgUserId(0);
                 userMessage.setRecvMsgUserId(userReg.getId());
                 userMessageMapper.insertSelective(userMessage);
-
-                //发送激活邮件
-                MailUtil.sendActiveMail(user.getEmail(),strUuid);
-
 
                 regRespObj.setStatus(0);
                 System.out.println(request.getServletContext().getContextPath());

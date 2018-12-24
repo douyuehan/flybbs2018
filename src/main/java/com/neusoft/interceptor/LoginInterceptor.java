@@ -1,5 +1,6 @@
 package com.neusoft.interceptor;
 
+import com.neusoft.domain.User;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,7 +25,17 @@ public class LoginInterceptor implements HandlerInterceptor {
         Object object = httpSession.getAttribute("userinfo");
         if(object != null)
         {
-            return true;
+            //邮箱是否已激活
+            User user = (User)object;
+            if(user.getActiveState() == 1)
+            {
+                return true;
+            }
+            else
+            {
+                httpServletRequest.getRequestDispatcher("/WEB-INF/jsp/user/active.jsp").forward(httpServletRequest,httpServletResponse);
+            }
+
         }
         else
         {

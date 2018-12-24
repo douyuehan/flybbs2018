@@ -163,3 +163,7 @@ create table tab_user_comment_agree(
 	userid int not null DEFAULT 0,
 	commentid int not null DEFAULT 0
 );
+
+alter table tab_user add COLUMN active_code varchar(100) NOT NULL DEFAULT '';
+alter table tab_user add COLUMN active_state int(10) NOT NULL DEFAULT 0;
+

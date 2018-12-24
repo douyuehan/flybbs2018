@@ -13,13 +13,13 @@ public class MailUtil {
 
     public static void main(String[] args) throws Exception {
 
-        sendActiveMail("songboriceboy@163.com","555555555555");
+        sendActiveMail("334835178@qq.com","555555555555");
     }
     // 发件人的 邮箱 和 密码（替换为自己的邮箱和密码）
     // PS: 某些邮箱服务器为了增加邮箱本身密码的安全性，给 SMTP 客户端设置了独立密码（有的邮箱称为“授权码”）,
     //     对于开启了独立密码的邮箱, 这里的邮箱密码必需使用这个独立密码（授权码）。
     public static String myEmailAccount = "songboriceboy@163.com";
-    public static String myEmailPassword = "songbo982514";
+    public static String myEmailPassword = "zhangsan123";
 
     // 发件人邮箱的 SMTP 服务器地址, 必须准确, 不同邮件服务器地址不同, 一般(只是一般, 绝非绝对)格式为: smtp.xxx.com
     // 网易163邮箱的 SMTP 服务器地址为: smtp.163.com
@@ -96,14 +96,14 @@ public class MailUtil {
         MimeMessage message = new MimeMessage(session);
 
         // 2. From: 发件人
-        message.setFrom(new InternetAddress(sendMail, "惠达商城", "UTF-8"));
+        message.setFrom(new InternetAddress(sendMail, "尊敬的睿道社区用户", "UTF-8"));
 
         // 3. To: 收件人（可以增加多个收件人、抄送、密送）
         message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiveMail, "XX用户", "UTF-8"));
 
         // 4. Subject: 邮件主题
-        message.setSubject("打折钜惠", "UTF-8");
-        String activeUrl="http://localhost:8080/shop/shopqt/user/activemail?mailcode="+mailActiveCode;
+        message.setSubject("用户激活", "UTF-8");
+        String activeUrl="http://localhost:8085/user/activemail/"+mailActiveCode;
         // 5. Content: 邮件正文（可以使用html标签）
         message.setContent("尊敬的用户，您好！我是睿道社区站长xxx，请点击激活链接完成邮箱激活<a href=\""+activeUrl+"\" target=\"_blank\">"+activeUrl+"</a>", "text/html;charset=UTF-8");
 

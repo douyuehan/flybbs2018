@@ -3,7 +3,6 @@ package com.neusoft.domain;
 import java.util.Date;
 
 public class User {
-    private Integer isadmin;
     private Integer id;
 
     private String email;
@@ -30,13 +29,11 @@ public class User {
 
     private Date joinTime;
 
-    public Integer getIsadmin() {
-        return isadmin;
-    }
+    private Integer isadmin;
 
-    public void setIsadmin(Integer isadmin) {
-        this.isadmin = isadmin;
-    }
+    private String activeCode;
+
+    private Integer activeState;
 
     public Integer getId() {
         return id;
@@ -140,5 +137,29 @@ public class User {
 
     public void setJoinTime(Date joinTime) {
         this.joinTime = joinTime;
+    }
+
+    public Integer getIsadmin() {
+        return isadmin;
+    }
+
+    public void setIsadmin(Integer isadmin) {
+        this.isadmin = isadmin;
+    }
+
+    public String getActiveCode() {
+        return activeCode;
+    }
+
+    public void setActiveCode(String activeCode) {
+        this.activeCode = activeCode == null ? null : activeCode.trim();
+    }
+
+    public Integer getActiveState() {
+        return activeState;
+    }
+
+    public void setActiveState(Integer activeState) {
+        this.activeState = activeState;
     }
 }

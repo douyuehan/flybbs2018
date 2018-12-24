@@ -16,10 +16,12 @@
     <result column="kiss_num" property="kissNum" jdbcType="INTEGER" />
     <result column="join_time" property="joinTime" jdbcType="TIMESTAMP" />
     <result column="isadmin" property="isadmin" jdbcType="INTEGER" />
+    <result column="active_code" property="activeCode" jdbcType="VARCHAR" />
+    <result column="active_state" property="activeState" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, email, nickname, passwd, city, sign, sex, pic_path, qq, weibo, vip_grade, kiss_num, 
-    join_time
+    join_time, isadmin, active_code, active_state
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,12 +37,14 @@
     insert into tab_user (id, email, nickname, 
       passwd, city, sign, 
       sex, pic_path, qq, weibo, 
-      vip_grade, kiss_num, join_time
+      vip_grade, kiss_num, join_time, 
+      isadmin, active_code, active_state
       )
     values (#{id,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{passwd,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, 
       #{sex,jdbcType=INTEGER}, #{picPath,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{weibo,jdbcType=VARCHAR}, 
-      #{vipGrade,jdbcType=INTEGER}, #{kissNum,jdbcType=INTEGER}, #{joinTime,jdbcType=TIMESTAMP}
+      #{vipGrade,jdbcType=INTEGER}, #{kissNum,jdbcType=INTEGER}, #{joinTime,jdbcType=TIMESTAMP}, 
+      #{isadmin,jdbcType=INTEGER}, #{activeCode,jdbcType=VARCHAR}, #{activeState,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.neusoft.domain.User" >
@@ -85,6 +89,15 @@
       <if test="joinTime != null" >
         join_time,
       </if>
+      <if test="isadmin != null" >
+        isadmin,
+      </if>
+      <if test="activeCode != null" >
+        active_code,
+      </if>
+      <if test="activeState != null" >
+        active_state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -125,6 +138,15 @@
       </if>
       <if test="joinTime != null" >
         #{joinTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isadmin != null" >
+        #{isadmin,jdbcType=INTEGER},
+      </if>
+      <if test="activeCode != null" >
+        #{activeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="activeState != null" >
+        #{activeState,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -167,6 +189,15 @@
       <if test="joinTime != null" >
         join_time = #{joinTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isadmin != null" >
+        isadmin = #{isadmin,jdbcType=INTEGER},
+      </if>
+      <if test="activeCode != null" >
+        active_code = #{activeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="activeState != null" >
+        active_state = #{activeState,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -183,9 +214,13 @@
       weibo = #{weibo,jdbcType=VARCHAR},
       vip_grade = #{vipGrade,jdbcType=INTEGER},
       kiss_num = #{kissNum,jdbcType=INTEGER},
-      join_time = #{joinTime,jdbcType=TIMESTAMP}
+      join_time = #{joinTime,jdbcType=TIMESTAMP},
+      isadmin = #{isadmin,jdbcType=INTEGER},
+      active_code = #{activeCode,jdbcType=VARCHAR},
+      active_state = #{activeState,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <select id="selectByEmail" parameterType="String" resultMap="BaseResultMap">
     select * from tab_user where email=#{value};
   </select>
@@ -195,19 +230,23 @@
   <select id="selectByNickname" parameterType="String" resultMap="BaseResultMap">
     select * from tab_user where nickname=#{value};
   </select>
+  <select id="selectByActiveCode" parameterType="String" resultMap="BaseResultMap">
+    select * from tab_user where active_code=#{value};
+  </select>
+
 
   <select id="getTotalCounts" resultType="int">
-      select count(*) as num from tab_user
+    select count(*) as num from tab_user
   </select>
 
   <select id="getPagedUser" parameterType="PageInfo" resultType="User">
-      select * from tab_user limit #{pageStart},#{pageSize}
+    select * from tab_user limit #{pageStart},#{pageSize}
   </select>
   <select id="getTopUsers" resultType="map">
-select tab_user.nickname,tab_user.pic_path, tab_comment.user_id, count(*) as comment_num from tab_comment
-join tab_user on tab_user.id = tab_comment.user_id
-GROUP BY tab_comment.user_id
-order by comment_num desc
-limit 0,12
+    select tab_user.nickname,tab_user.pic_path, tab_comment.user_id, count(*) as comment_num from tab_comment
+    join tab_user on tab_user.id = tab_comment.user_id
+    GROUP BY tab_comment.user_id
+    order by comment_num desc
+    limit 0,12
   </select>
 </mapper>

@@ -18,6 +18,7 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
     User selectByEmail(String email);
     User selectByEmailAndPass(User user);
     User selectByNickname(String nickname);
@@ -25,4 +26,6 @@ public interface UserMapper {
     List<User> getPagedUser(PageInfo pageInfo);
 
     List<Map<String,Object>> getTopUsers();
+
+    User selectByActiveCode(String activecode);
 }

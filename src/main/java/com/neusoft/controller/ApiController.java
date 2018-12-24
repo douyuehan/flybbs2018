@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.*;
 import com.neusoft.mapper.*;
 import com.neusoft.response.RegRespObj;
+import com.neusoft.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,19 @@ public class ApiController {
         RegRespObj regRespObj = new RegRespObj();
         regRespObj.setStatus(0);
 
+        response.getWriter().println(JSON.toJSONString(regRespObj));
+    }
+    @RequestMapping("activate")
+    public void activate(HttpSession httpSession,HttpServletResponse response) throws Exception {
+        User userLogin = (User)httpSession.getAttribute("userinfo");
+        UUID uuid = UUID.randomUUID();
+        String strUuid = uuid.toString().replace("-","");
+        userLogin.setActiveCode(strUuid);
+        userMapper.updateByPrimaryKeySelective(userLogin);
+        MailUtil.sendActiveMail(userLogin.getEmail(),strUuid);
+
+        RegRespObj regRespObj = new RegRespObj();
+        regRespObj.setStatus(0);
         response.getWriter().println(JSON.toJSONString(regRespObj));
     }
 

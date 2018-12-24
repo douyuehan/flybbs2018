@@ -7,6 +7,7 @@ import com.neusoft.mapper.*;
 import com.neusoft.util.MD5Utils;
 import com.neusoft.domain.User;
 import com.neusoft.response.RegRespObj;
+import com.neusoft.util.MailUtil;
 import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,10 +53,33 @@ public class UserController {
         return "user/reg";
     }
 
+    @RequestMapping("active")
+    public String active()
+    {
+        return "user/active";
+    }
+
+    @RequestMapping("activemail/{code}")
+    public void activemail(@PathVariable String code,HttpServletRequest request,HttpServletResponse response)
+    {
+        User user = userMapper.selectByActiveCode(code);
+        if(user != null)
+        {
+            user.setActiveState(1);
+            userMapper.updateByPrimaryKeySelective(user);
+//            response.sendRedirect("");
+        }
+        else
+        {
+
+        }
+
+    }
+
+
     @RequestMapping("doreg")
     @ResponseBody
-    public RegRespObj doReg(User user, HttpServletRequest request)
-    {
+    public RegRespObj doReg(User user, HttpServletRequest request) throws Exception {
         RegRespObj regRespObj = new RegRespObj();
         User user1 = userMapper.selectByEmail(user.getEmail());
         if(user1==null){
@@ -64,6 +88,9 @@ public class UserController {
             String passwd = user.getPasswd();
             String pwd = MD5Utils.getPwd(passwd);
             user.setPasswd(pwd);
+            UUID uuid = UUID.randomUUID();
+            String strUuid = uuid.toString().replace("-","");
+            user.setActiveCode(strUuid);
             int i = userMapper.insertSelective(user);
             if(i>0){
                 User userReg = userMapper.selectByNickname(user.getNickname());
@@ -75,6 +102,9 @@ public class UserController {
                 userMessage.setTriggerMsgUserId(0);
                 userMessage.setRecvMsgUserId(userReg.getId());
                 userMessageMapper.insertSelective(userMessage);
+
+                //发送激活邮件
+                MailUtil.sendActiveMail(user.getEmail(),strUuid);
 
 
                 regRespObj.setStatus(0);

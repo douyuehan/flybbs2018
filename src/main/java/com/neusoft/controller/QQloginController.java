@@ -26,7 +26,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping(value = "/oauth")
+@RequestMapping(value = "oauth")
 public class QQloginController {
     private static String QQ_APP_ID = "101533819";
     private static String QQ_APP_KEY = "9b3328e1f3c22dd1b3839450253aab0f";
